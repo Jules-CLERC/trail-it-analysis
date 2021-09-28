@@ -42,53 +42,59 @@ D = D %>% mutate(Timestamp = paste(date,time),
 # Visualize
 #############
 
+listPlayers = D %>% 
+  distinct(profileID, playerName) %>%
+  mutate(playerNameID = paste(playerName, "(", profileID, ")"))
+
 #How many players are there in total?
-nbPlayers = D %>% 
-  summarise(player_name = unique(playerName)) %>% 
-  count()
+
+nbPlayers = listPlayers %>% count()
 
 #On which dates did the players play?
 datesPlayers = D %>% 
-  select(playerName, date) %>%
-  distinct(playerName, date) %>%
-  arrange(playerName, date)
+  select(profileID, date) %>%
+  distinct(profileID, date) %>%
+  arrange(profileID, date)
+datesPlayers = merge(datesPlayers, listPlayers, "profileID")
 
 #For how much time did each player play? (number of days, minutes)
 nbDaysGamePlayers = datesPlayers %>%
-  count(playerName)
+  group_by(profileID) %>%
+  count()
 names(nbDaysGamePlayers)[2] <- 'nbDays'
 
 nbMinutesGamePlayers = D %>% 
-  select(playerName, sessionLength) %>%
-  group_by(playerName) %>%
+  select(profileID, sessionLength) %>%
+  group_by(profileID) %>%
   summarise(sum(sessionLength))
 names(nbMinutesGamePlayers)[2] <- 'nbMinutes'
 
-nbTimeGamePlayers = merge(nbDaysGamePlayers, nbMinutesGamePlayers, "playerName")
+nbTimeGamePlayers = merge(nbDaysGamePlayers, nbMinutesGamePlayers, "profileID")
+nbTimeGamePlayers = merge(nbTimeGamePlayers, listPlayers, "profileID")
 
 #How many of the players are stroke patients?
-nbStrokePlayers = D %>% 
-  select(playerName, trainingReason) %>%
-  distinct(playerName, trainingReason) %>%
+strokePlayers = D %>% 
+  select(profileID, trainingReason) %>%
   filter(!(trainingReason == "OtherReason")) %>%
-  distinct(playerName) %>%
-  count()
+  distinct(profileID)
 
 #Did the players improve their overall reaction time?
+#TODO : change the calculation of the improve
 avgReactionTime = D %>%
-  select(playerName, date, sessionMedianReactionTime) %>%
-  group_by(playerName) %>%
+  select(profileID, date, sessionMedianReactionTime) %>%
+  group_by(profileID) %>%
   summarise(avgReactionTime = mean(sessionMedianReactionTime))
 
 lastReactionTime = D %>%
-  select(playerName, date, time, sessionMedianReactionTime) %>%
-  group_by(playerName) %>%
+  select(profileID, date, time, sessionMedianReactionTime) %>%
+  group_by(profileID) %>%
   mutate(Timestamp = paste(date,time),
          Timestamp = as.POSIXct(Timestamp, format = "%Y-%m-%d %H:%M:%OS")) %>%
   arrange(Timestamp) %>%
   filter(time == max(time)) %>%
   summarise(lastReactionTime = min(sessionMedianReactionTime))
 
-improveReactionTime = merge(avgReactionTime, lastReactionTime, "playerName") %>%
+improveReactionTime = merge(avgReactionTime, lastReactionTime, "profileID") %>%
   mutate(IsImprove = ifelse(avgReactionTime > lastReactionTime, TRUE, FALSE))
+improveReactionTime = merge(improveReactionTime, listPlayers, "profileID")
 
