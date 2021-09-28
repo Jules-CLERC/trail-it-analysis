@@ -1,18 +1,5 @@
-#
-# This is the user-interface definition of a Shiny web application. You can
-# run the application by clicking 'Run App' above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    http://shiny.rstudio.com/
-#
-
-library(shiny)
-
-# Define UI for application that draws a histogram
 shinyUI(fluidPage(
 
-    # Application title
     titlePanel("Trail-it data"),
     
     mainPanel(
@@ -34,10 +21,8 @@ shinyUI(fluidPage(
         plotlyOutput("time_minutes_players_graph"),
         h3('number of days'),
         plotlyOutput("time_days_players_graph"),
-        h3('frequency day / minute'),
-        plotlyOutput("time_frequencies_players_graph"),
         h3('frequency year / month'),
-        h4('todo'),
+        plotlyOutput("time_year_by_month_players_graph"),
 
         h2("How many of the players are stroke patients?"),
         textOutput("nb_players_stroke"),

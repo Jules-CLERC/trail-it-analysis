@@ -1,12 +1,7 @@
-library(RMySQL)
-library(tidyverse)
-library(plotly)
-
 #############
 # Load
 #############
 
-options("digits.secs"=6)
 credentials <- read.csv("credentials.csv", header=TRUE,sep=",", colClasses=c("character","character","character","character"))
 
 lapply( dbListConnections( dbDriver( drv = "MySQL")), dbDisconnect)
@@ -57,26 +52,49 @@ datesPlayers = D %>%
   arrange(profileID, date)
 datesPlayers = merge(datesPlayers, listPlayers, "profileID")
 
-#For how much time did each player play? (number of days, minutes)
+#For how much time did each player play? (number of years, months, days, minutes)
+#years
+nbYearsGamePlayers = datesPlayers %>%
+  mutate(year = substr(date, 0, 4)) %>%
+  distinct(profileID, year) %>%
+  group_by(profileID) %>%
+  count()
+names(nbYearsGamePlayers)[2] <- 'nbYears'
+#months
+nbMonthsGamePlayers = datesPlayers %>%
+  mutate(month = substr(date, 0, 7)) %>%
+  distinct(profileID, month) %>%
+  group_by(profileID) %>%
+  count()
+names(nbMonthsGamePlayers)[2] <- 'nbMonths'
+#days
 nbDaysGamePlayers = datesPlayers %>%
   group_by(profileID) %>%
   count()
 names(nbDaysGamePlayers)[2] <- 'nbDays'
-
+#minutes
 nbMinutesGamePlayers = D %>% 
   select(profileID, sessionLength) %>%
   group_by(profileID) %>%
   summarise(sum(sessionLength))
 names(nbMinutesGamePlayers)[2] <- 'nbMinutes'
-
+#merge all in nbTimeGamePlayers
 nbTimeGamePlayers = merge(nbDaysGamePlayers, nbMinutesGamePlayers, "profileID")
+nbTimeGamePlayers = merge(nbTimeGamePlayers, nbYearsGamePlayers, "profileID")
+nbTimeGamePlayers = merge(nbTimeGamePlayers, nbMonthsGamePlayers, "profileID")
 nbTimeGamePlayers = merge(nbTimeGamePlayers, listPlayers, "profileID")
 
 #How many of the players are stroke patients?
 strokePlayers = D %>% 
   select(profileID, trainingReason) %>%
   filter(!(trainingReason == "OtherReason")) %>%
-  distinct(profileID)
+  distinct(profileID) %>%
+  mutate(stroke = "stroke")
+
+strokePlayers = merge(strokePlayers, listPlayers, "profileID", all.y = TRUE)
+strokePlayers = strokePlayers[c(1,2)]
+strokePlayers[is.na(strokePlayers)] <- "no stroke"
+nbTimeGamePlayers = merge(nbTimeGamePlayers, strokePlayers, "profileID")
 
 #Did the players improve their overall reaction time?
 #TODO : change the calculation of the improve
@@ -95,6 +113,9 @@ lastReactionTime = D %>%
   summarise(lastReactionTime = min(sessionMedianReactionTime))
 
 improveReactionTime = merge(avgReactionTime, lastReactionTime, "profileID") %>%
-  mutate(IsImprove = ifelse(avgReactionTime > lastReactionTime, TRUE, FALSE))
+  mutate(isImprove = ifelse(avgReactionTime > lastReactionTime, "Improve", "Not improve"))
+improveReactionTime = improveReactionTime[c(1,4)]
+nbTimeGamePlayers = merge(nbTimeGamePlayers, improveReactionTime, "profileID")
 improveReactionTime = merge(improveReactionTime, listPlayers, "profileID")
+
 
