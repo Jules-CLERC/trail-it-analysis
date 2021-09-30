@@ -1,32 +1,23 @@
 shinyServer(function(input, output) {
-    output$nb_players <- renderText({
-        paste("Number of players : ", nbPlayers)
-    })
-
-    output$dates_player_table <- renderDataTable(
-        datesPlayers %>% filter(playerNameID == input$dates_player_select) %>% select(date)
-        )
-
-    output$time_minutes_players_graph<- renderPlotly({
-        plot_ly() %>%
-            add_trace(data = nbTimeGamePlayers, x=~playerNameID, y=~nbMinutes, type = 'bar', mode = 'lines', name=~stroke)
-    })
-
-    output$time_days_players_graph<- renderPlotly({
-        plot_ly() %>%
-            add_trace(data = nbTimeGamePlayers, x=~playerNameID, y=~nbDays, type = 'bar', mode = 'lines', name=~stroke)
-    })
     
-    output$time_year_by_month_players_graph<- renderPlotly({
-        plot_ly() %>%
-            add_trace(data = nbTimeGamePlayers, x=~nbYears / nbMonths, y=~playerNameID, type = 'bar', mode = 'lines', name=~isImprove)
+    #Module to import SQL database
+    D <- callModule(data_import, "data_import_sql")
+    #Wait for D
+    observeEvent(D$trigger, {
+        listPlayers <- callModule(create_list_players, "list_players", D$variable)
+        #Wait for listPlayers
+        observeEvent(listPlayers$trigger, {
+            callModule(calc_nb_players, "nb_players", listPlayers$variable)
+            datesPlayers <- callModule(calc_dates_players, "dates_players", D$variable, listPlayers$variable)
+            strokesPlayers <- callModule(calc_strokes_players, "strokes_players", D$variable, listPlayers$variable)
+            improveReactionTime <- callModule(calc_improve_players, "improve_players", D$variable, listPlayers$variable)
+            #Wait for datesPlayers
+            observeEvent(datesPlayers$trigger, {
+                #Wait for strokesPlayers
+                observeEvent(strokesPlayers, {
+                    callModule(calc_times_players, "times_players", D$variable, listPlayers$variable, datesPlayers$variable, strokesPlayers$variable, improveReactionTime$variable)
+                })
+            })
+        })
     })
-    
-    output$nb_players_stroke <- renderText({
-        paste("Number of players stroke : ", strokePlayers %>% count())
-    })
-
-    output$improve_players_table <- renderDataTable(
-        improveReactionTime
-    )
 })
