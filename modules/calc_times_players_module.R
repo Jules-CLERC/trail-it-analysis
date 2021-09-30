@@ -49,6 +49,8 @@ calc_times_players <- function(input, output, session, D, listPlayers, datesPlay
   nbTimeGamePlayers = merge(nbTimeGamePlayers, strokesPlayers, "profileID")
   nbTimeGamePlayers = merge(nbTimeGamePlayers, improveReactionTime, "profileID")
   
+  #Show the plots
+  
   output$time_minutes_players_graph<- renderPlotly({
       plot_ly() %>%
           add_trace(data = nbTimeGamePlayers, x=~playerNameID, y=~nbMinutes, type = 'bar', name=~stroke)

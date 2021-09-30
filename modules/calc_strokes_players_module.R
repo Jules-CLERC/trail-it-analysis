@@ -1,11 +1,11 @@
 #UI function
 calc_strokes_players_UI <- function(id) {
   ns <- NS(id)
-  
-  list(fluidRow(
-    h2("How many of the players are stroke patients?"),
-    textOutput(ns("nb_players_stroke"))
-  ))
+  valueBox(
+    "Players strokes", 
+    h2(textOutput(ns("nb_players_stroke"))), 
+    icon = icon("hospital-user")
+  )
 }
 
 #server function
@@ -21,8 +21,9 @@ calc_strokes_players <- function(input, output, session, D, listPlayers) {
   strokesPlayers = strokesPlayers[c(1,2)]
   strokesPlayers[is.na(strokesPlayers)] <- "no stroke"
   
+  #Show the plot
   output$nb_players_stroke <- renderText({
-    paste("Number of players stroke : ", strokesPlayers %>% count())
+    paste(strokesPlayers %>% filter(stroke == "stroke") %>% count())
   })
   
   toReturn <- reactiveValues(

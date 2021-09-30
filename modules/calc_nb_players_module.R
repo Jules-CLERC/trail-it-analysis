@@ -1,17 +1,19 @@
 #UI function
 calc_nb_players_UI <- function(id) {
   ns <- NS(id)
-  
-  list(fluidRow(
-    h2("How many players are there in total?"),
-    textOutput(ns("nb_players"))
-  ))
+  valueBox(
+    "Players", 
+    h2(textOutput(ns("nb_players"))), 
+    icon = icon("user")
+  )
 }
 
 #server function
 calc_nb_players <- function(input, output, session, listPlayers) {
   nbPlayers = listPlayers %>% count()
+  
+  #Show the result
   output$nb_players <- renderText({
-    paste("Number of players : ", nbPlayers)
+    paste(nbPlayers)
   })
 }

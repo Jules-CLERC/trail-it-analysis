@@ -30,6 +30,7 @@ calc_improve_players <- function(input, output, session, D, listPlayers) {
     mutate(isImprove = ifelse(avgReactionTime > lastReactionTime, "Improve", "Not improve"))
   improveReactionTime = improveReactionTime[c(1,4)]
   
+  #Show the data
   output$improve_players_table <- renderDataTable(
     merge(improveReactionTime, listPlayers, "profileID")
   )

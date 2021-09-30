@@ -1,6 +1,4 @@
 shinyServer(function(input, output) {
-    
-    #Module to import SQL database
     D <- callModule(data_import, "data_import_sql")
     #Wait for D
     observeEvent(D$trigger, {

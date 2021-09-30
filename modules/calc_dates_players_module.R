@@ -20,9 +20,11 @@ calc_dates_players <- function(input, output, session, D, listPlayers) {
     arrange(profileID, date)
   datesPlayers = merge(datesPlayers, listPlayers, "profileID")
   
+  #Add data to the select input
   updateSelectInput(session, "dates_player_select",
                     choices = listPlayers["playerNameID"])
 
+  #show the dates of a playerNameID
   output$dates_player_table <- renderDataTable(
       datesPlayers %>% filter(playerNameID == input$dates_player_select) %>% select(date)
       )
