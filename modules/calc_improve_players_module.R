@@ -1,11 +1,15 @@
 #UI function
 calc_improve_players_UI <- function(id) {
   ns <- NS(id)
-  
-  list(fluidRow(
-    h2("Did the players improve their overall reaction time?"),
-    dataTableOutput(ns('improve_players_table'))
-  ))
+  fluidRow(
+    box(
+      title="Did the players improve their overall reaction time?",
+      status="primary",
+      solidHeader = TRUE,
+      width = "100%",
+      dataTableOutput(ns('improve_players_table'))
+    )
+  )
 }
 
 #server function

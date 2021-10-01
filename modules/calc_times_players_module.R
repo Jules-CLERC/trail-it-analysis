@@ -2,15 +2,12 @@
 calc_times_players_UI <- function(id) {
   ns <- NS(id)
   
-  list(fluidRow(
-    h2("For how much time did each player play? (number of days, minutes)"),
-    h3('number of minutes'),
-    plotlyOutput(ns("time_minutes_players_graph")),
-    h3('number of days'),
-    plotlyOutput(ns("time_days_players_graph")),
-    h3('frequency year / month'),
-    plotlyOutput(ns("time_year_by_month_players_graph"))
-  ))
+  fluidRow(
+    h1("For how much time did each player play ?"),
+    box(title = "number of minutes", status="primary", solidHeader = TRUE, plotlyOutput(ns("time_minutes_players_graph"))),
+    box(title = "number of days", status="primary", solidHeader = TRUE, plotlyOutput(ns("time_days_players_graph"))),
+    box(title = "frequency year / month", status="primary", solidHeader = TRUE, plotlyOutput(ns("time_year_by_month_players_graph")))
+  )
 }
 
 #server function

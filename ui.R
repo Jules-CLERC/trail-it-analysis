@@ -14,17 +14,20 @@ shinyUI(
         dashboardBody(
             tabItems(
                 tabItem("Home",
-                    calc_nb_players_UI("nb_players"),
-                    calc_strokes_players_UI("strokes_players")
+                    fluidPage(
+                        calc_nb_players_UI("nb_players"),
+                        calc_strokes_players_UI("strokes_players")
+                    )
                 ),
                 tabItem("Dates_players",
-                    calc_dates_players_UI("dates_players")
+                    fluidPage(calc_dates_players_UI("dates_players"))
+                    
                 ),
                 tabItem("Times_players",
-                        calc_times_players_UI("times_players")
+                    fluidPage(calc_times_players_UI("times_players"))
                 ),
                 tabItem("Improve_players",
-                        calc_improve_players_UI("improve_players")
+                    fluidPage(calc_improve_players_UI("improve_players"))
                 )
             )
         )

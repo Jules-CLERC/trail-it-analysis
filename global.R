@@ -1,6 +1,7 @@
 #Import libraries
 library(shiny)
 library(shinydashboard)
+library(shinycustomloader)
 library(RMySQL)
 library(tidyverse)
 library(plotly)

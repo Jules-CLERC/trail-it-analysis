@@ -2,8 +2,8 @@
 calc_strokes_players_UI <- function(id) {
   ns <- NS(id)
   valueBox(
-    "Players strokes", 
-    h2(textOutput(ns("nb_players_stroke"))), 
+    "Players strokes",
+    h2(withLoader(textOutput(ns("nb_players_stroke")), type = "html", loader="loader3", proxy.height="50px")), 
     icon = icon("hospital-user")
   )
 }
