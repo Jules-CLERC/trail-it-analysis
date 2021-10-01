@@ -9,7 +9,8 @@ data analysis of trail it
 
 ## Previews
 
-![alt text](https://github.com/Jules-CLERC/trail-it-analysis/blob/main/img/preview_1/image_1.png?raw=true)
-![alt text](https://github.com/Jules-CLERC/trail-it-analysis/blob/main/img/preview_1/image_2.png?raw=true)
-![alt text](https://github.com/Jules-CLERC/trail-it-analysis/blob/main/img/preview_1/image_3.png?raw=true)
-![alt text](https://github.com/Jules-CLERC/trail-it-analysis/blob/main/img/preview_1/image_4.png?raw=true)
+![alt text](https://github.com/Jules-CLERC/trail-it-analysis/blob/main/img/preview/image_1.png?raw=true)
+![alt text](https://github.com/Jules-CLERC/trail-it-analysis/blob/main/img/preview/image_2.png?raw=true)
+![alt text](https://github.com/Jules-CLERC/trail-it-analysis/blob/main/img/preview/image_3.png?raw=true)
+![alt text](https://github.com/Jules-CLERC/trail-it-analysis/blob/main/img/preview/image_4.png?raw=true)
+![alt text](https://github.com/Jules-CLERC/trail-it-analysis/blob/main/img/preview/image_5.png?raw=true)
