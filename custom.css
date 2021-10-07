@@ -1,0 +1,38 @@
+body {
+    padding-top: 15px;
+    max-width: 1280px;
+    margin: 0 auto;
+}
+
+header {
+  margin-bottom: 25px;
+}
+
+footer {
+    background: no-repeat url("hmi-lab.svg");
+    height: 50px;
+    margin-top: 15px;
+    width: 100%;
+    display: inline-block;
+}
+
+.tab-pane > .main-content {
+    margin-top: 3em;
+}
+
+.navbar-brand {
+    font-size: 12px;
+    padding: 15px 0px;
+}
+
+.shiny-output-error-vis {
+
+    color: #888;
+    text-align: center;
+    width: 100%;
+    padding-top: 5em;
+    background-color: #EFEFEF;
+    background: no-repeat center url("placeholder-graph.svg");
+    min-height: 300px;
+    border: 1px solid lightgrey;
+}

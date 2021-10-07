@@ -1,35 +1,20 @@
 shinyUI(
-    dashboardPage(
-        dashboardHeader(
-            title = "Trail-it analysis"
+    fluidPage(
+        
+        includeCSS("custom.css"),
+        useShinyjs(),
+        
+        tags$header(fluidRow(
+            column(1,div(class="text-center",img(src='whack_icon.svg', id="whack-logo"))),
+            column(8,data_import_UI("data_import_sql"))
+        )),
+        
+        navlistPanel(id = "pageChooser", well= FALSE, widths=c(2,10),
+                     tabPanel("Profile information", page_profile_information_UI("profile_information")),
+                     tabPanel("Dates by player", page_dates_players_UI("dates_players")),
+                     tabPanel("Statistics times", page_times_players_UI("times_players")),
+                     tabPanel("Improvements", page_improves_players_UI("improves_players"))
         ),
-        dashboardSidebar(
-            sidebarMenu(
-                menuItem("Home", tabName = "Home", icon = icon("home")),
-                menuItem("Dates by player", tabName = "Dates_players", icon = icon("calendar")),
-                menuItem("Statistics times", tabName = "Times_players", icon = icon("clock")),
-                menuItem("Improvements", tabName = "Improve_players", icon = icon("chart-line"))
-            )
-        ),
-        dashboardBody(
-            tabItems(
-                tabItem("Home",
-                    fluidPage(
-                        calc_nb_players_UI("nb_players"),
-                        calc_strokes_players_UI("strokes_players")
-                    )
-                ),
-                tabItem("Dates_players",
-                    fluidPage(calc_dates_players_UI("dates_players"))
-                    
-                ),
-                tabItem("Times_players",
-                    fluidPage(calc_times_players_UI("times_players"))
-                ),
-                tabItem("Improve_players",
-                    fluidPage(calc_improve_players_UI("improve_players"))
-                )
-            )
-        )
-    )
-)
+        
+        tags$footer()
+    ))

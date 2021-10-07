@@ -1,21 +1,67 @@
 shinyServer(function(input, output) {
+    #init reactives values
+    r_D <- reactiveValues(df = NULL)
+    r_listPlayers <- reactiveValues(df = NULL)
+    r_datesPlayers <- reactiveValues(df = NULL)
+    r_strokesPlayers <- reactiveValues(df = NULL)
+    r_improvesPlayers <- reactiveValues(df = NULL)
+    r_timesGamesPlayers <- reactiveValues(df = NULL)
+    
+    #reactives values
     D <- callModule(data_import, "data_import_sql")
-    #Wait for D
+    listPlayers <- callModule(data_list_players, "data_list_players", 
+                                reactive(r_D$df))
+    improvesPlayers <- callModule(data_improves_players, "data_improves_players", 
+                                reactive(r_D$df))
+    strokesPlayers <- callModule(data_strokes_players, "data_strokes_players", 
+                                reactive(r_D$df),
+                                reactive(r_listPlayers$df))
+    datesPlayers <- callModule(data_dates_players, "data_dates_players", 
+                                reactive(r_D$df),
+                                reactive(r_listPlayers$df))
+    timesGamesPlayers <- callModule(data_times_games_players, "data_times_games_players", 
+                                reactive(r_D$df),
+                                reactive(r_listPlayers$df),
+                                reactive(r_datesPlayers$df),
+                                reactive(r_strokesPlayers$df),
+                                reactive(r_improvesPlayers$df))
+    
+    #call pages
+    callModule(page_profile_information, "profile_information",
+               reactive(r_listPlayers$df),
+               reactive(r_strokesPlayers$df))
+    callModule(page_improves_players, "improves_players",
+               reactive(r_listPlayers$df),
+               reactive(r_improvesPlayers$df))
+    callModule(page_dates_players, "dates_players",
+               reactive(r_listPlayers$df),
+               reactive(r_datesPlayers$df))
+    callModule(page_times_players, "times_players",
+               reactive(r_timesGamesPlayers$df))
+    
+    #observeEvents
     observeEvent(D$trigger, {
-        listPlayers <- callModule(create_list_players, "list_players", D$variable)
-        #Wait for listPlayers
-        observeEvent(listPlayers$trigger, {
-            callModule(calc_nb_players, "nb_players", listPlayers$variable)
-            datesPlayers <- callModule(calc_dates_players, "dates_players", D$variable, listPlayers$variable)
-            strokesPlayers <- callModule(calc_strokes_players, "strokes_players", D$variable, listPlayers$variable)
-            improveReactionTime <- callModule(calc_improve_players, "improve_players", D$variable, listPlayers$variable)
-            #Wait for datesPlayers
-            observeEvent(datesPlayers$trigger, {
-                #Wait for strokesPlayers
-                observeEvent(strokesPlayers, {
-                    callModule(calc_times_players, "times_players", D$variable, listPlayers$variable, datesPlayers$variable, strokesPlayers$variable, improveReactionTime$variable)
-                })
-            })
-        })
+        req(D$trigger > 0)
+        r_D$df <- D$df
+    })
+    observeEvent(listPlayers$trigger, {
+        req(listPlayers$trigger > 0)
+        r_listPlayers$df <- listPlayers$df
+    })
+    observeEvent(strokesPlayers$trigger, {
+        req(strokesPlayers$trigger > 0)
+        r_strokesPlayers$df <- strokesPlayers$df
+    })
+    observeEvent(datesPlayers$trigger, {
+        req(datesPlayers$trigger > 0)
+        r_datesPlayers$df <- datesPlayers$df
+    })
+    observeEvent(improvesPlayers$trigger, {
+        req(improvesPlayers$trigger > 0)
+        r_improvesPlayers$df <- improvesPlayers$df
+    })
+    observeEvent(timesGamesPlayers$trigger, {
+        req(timesGamesPlayers$trigger > 0)
+        r_timesGamesPlayers$df <- timesGamesPlayers$df
     })
 })
