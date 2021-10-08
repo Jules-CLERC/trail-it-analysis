@@ -10,10 +10,10 @@ shinyUI(
         )),
         
         navlistPanel(id = "pageChooser", well= FALSE, widths=c(2,10),
-                     tabPanel("Profile information", page_profile_information_UI("profile_information")),
-                     tabPanel("Dates by player", page_dates_players_UI("dates_players")),
-                     tabPanel("Statistics times", page_times_players_UI("times_players")),
-                     tabPanel("Improvements", page_improves_players_UI("improves_players"))
+                     tabPanel("Profile information", page_profile_information_UI("page_profile_information")),
+                     tabPanel("Dates by player", page_dates_players_UI("page_dates_players")),
+                     tabPanel("Statistics times", page_times_players_UI("page_times_players")),
+                     tabPanel("Improvements", page_improves_players_UI("page_improves_players"))
         ),
         
         tags$footer()

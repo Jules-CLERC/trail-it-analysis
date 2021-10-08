@@ -8,7 +8,7 @@ data_import_UI <- function(id) {
     # When we create UI inside a module, we need to encapsulate
     # the ID with ns() (fx. ns("file") will result in "{modulename}-file"). 
     # This is necessary, in order for each ID to become unique.
-    actionButton(ns("addSQLData"), "Add sql data")
+    actionButton(ns("addSQLData"), "Add SQL Data")
   )
   )
 }
