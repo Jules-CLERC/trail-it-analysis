@@ -5,7 +5,7 @@ shinyUI(
         tags$header(fluidRow(
             column(1, div(class="text-center",img(src='icon.jpeg', style="height:50px;"))),
             column(1, data_import_UI("data_import_sql")),
-            column(1, actionButton("changeCurrentPlayer", "Change current player"))
+            column(10, data_select_player_UI("data_select_player"))
         )),
         
         titlePanel("Trail-it analysis"),

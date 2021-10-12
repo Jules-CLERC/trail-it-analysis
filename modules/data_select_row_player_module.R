@@ -10,12 +10,19 @@ data_select_row_player_UI <- function(id) {
 }
 
 #server function
-data_select_row_player <- function(input, output, session, playerNameID, profileID, currentPlayer) {
+data_select_row_player <- function(input, output, session, playerNameID, profileID) {
+  toReturn <- reactiveValues(
+    df = NULL,
+    trigger = 0
+  )
+  
   output$sessionText <- renderUI({
     paste(playerNameID)
   })
   observeEvent(input$actionChoose, {
-    currentPlayer$df <- profileID
-    currentPlayer$trigger <- currentPlayer$trigger + 1
+    toReturn$df <-  profileID
+    toReturn$trigger <- toReturn$trigger + 1
   })
+  
+  return(toReturn)
 }

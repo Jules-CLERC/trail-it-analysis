@@ -12,24 +12,33 @@ data_change_player_UI <- function(id) {
 }
 
 #server function
-data_change_player <- function(input, output, session, listPlayers, currentPlayer) {
+data_change_player <- function(input, output, session, listPlayers) {
+  toReturn <- reactiveValues(
+    df = NULL,
+    trigger = 0
+  )
   ns <- session$ns
   
   observeEvent(listPlayers(), {
-    validate(need(listPlayers(), "No data yet."))
-    
     output$sessionList <- renderUI({
+      validate(need(listPlayers(), "No data yet."))
       lapply(1:nrow(listPlayers()), function(i) {
         data_select_row_player_UI(ns(listPlayers()[i, "profileID"]))
       })
     })
     
     lapply(1:nrow(listPlayers()), function(i) {
-      callModule(data_select_row_player, 
-                 listPlayers()[i, "profileID"], 
-                 listPlayers()[i, "playerNameID"],
+      validate(need(listPlayers(), "No data yet."))
+      selectPlayer <- callModule(data_select_row_player,
                  listPlayers()[i, "profileID"],
-                 currentPlayer)
+                 listPlayers()[i, "playerNameID"],
+                 listPlayers()[i, "profileID"])
+      observeEvent(selectPlayer$trigger, {
+        req(selectPlayer$trigger > 0)
+        toReturn$df <-  selectPlayer$df
+        toReturn$trigger <- toReturn$trigger + 1
+      })
     })
   })
+  return(toReturn)
 }
