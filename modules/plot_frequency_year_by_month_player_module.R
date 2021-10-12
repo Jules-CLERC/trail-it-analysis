@@ -10,7 +10,7 @@ plot_frequency_year_by_month_player_UI <- function(id) {
 plot_frequency_year_by_month_player <- function(input, output, session, timesGamesPlayers) {
   
   output$time_year_by_month_players_graph<- renderPlotly({
-    validate(need(timesGamesPlayers(), "Waiting for data."))
+    validate(need(timesGamesPlayers(), "Waiting for data."), errorClass = "vis")
     plot_ly() %>%
       add_trace(data = timesGamesPlayers(), x=~nbYears / nbMonths, y=~playerNameID, type = 'bar', name=~isImprove)
   })

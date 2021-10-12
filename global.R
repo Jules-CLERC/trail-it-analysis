@@ -11,6 +11,8 @@ options("digits.secs"=6)
 ###modules
 #datas
 source("modules/data_import_module.R", local = T)
+source("modules/data_change_player_module.R", local = T)
+source("modules/data_select_row_player_module.R", local = T)
 source("modules/data_list_players_module.R", local = T)
 source("modules/data_dates_players_module.R", local = T)
 source("modules/data_strokes_players_module.R", local = T)

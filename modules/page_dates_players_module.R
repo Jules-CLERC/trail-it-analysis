@@ -2,21 +2,12 @@ page_dates_players_UI <- function(id) {
   ns = NS(id)
   mainPanel(width = 12,
             fluidRow(
-              box(
-                title="On which dates did the players play?",
-                status="primary",
-                solidHeader = TRUE,
-                width = "100%",
-                selectInput(ns("dates_player_select"),
-                            label = "Choose a player",
-                            choices = NULL,
-                            selected = NULL)
-              ),
-              box(
-                status="primary",
-                width = "100%",
-                dataTableOutput(ns('dates_player_table'))
-              )
+              h1("On which dates did the players play?"),
+              selectInput(ns("dates_player_select"),
+                                        label = "Choose a player",
+                                        choices = NULL,
+                                        selected = NULL),
+              dataTableOutput(ns('dates_player_table'))
             )
   )
 }

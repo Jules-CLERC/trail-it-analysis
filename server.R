@@ -1,6 +1,7 @@
 shinyServer(function(input, output) {
     #init reactives values
     r_D <- reactiveValues(df = NULL)
+    r_currentPlayer <- reactiveValues(df = NULL, trigger = 0)
     r_listPlayers <- reactiveValues(df = NULL)
     r_datesPlayers <- reactiveValues(df = NULL)
     r_strokesPlayers <- reactiveValues(df = NULL)
@@ -25,6 +26,9 @@ shinyServer(function(input, output) {
                                 reactive(r_datesPlayers$df),
                                 reactive(r_strokesPlayers$df),
                                 reactive(r_improvesPlayers$df))
+    callModule(data_change_player, "data_change_player",
+                                reactive(r_listPlayers$df),
+                                r_currentPlayer)
     
     #call pages
     callModule(page_profile_information, "page_profile_information",
@@ -63,5 +67,13 @@ shinyServer(function(input, output) {
     observeEvent(timesGamesPlayers$trigger, {
         req(timesGamesPlayers$trigger > 0)
         r_timesGamesPlayers$df <- timesGamesPlayers$df
+    })
+    observeEvent(input$changeCurrentPlayer, {
+        insertUI(selector = "#changeCurrentPlayer", where = "afterEnd",
+                 ui = showModal(modalDialog(data_change_player_UI("data_change_player"), easyClose = TRUE)))
+    })
+    observeEvent(r_currentPlayer$trigger, {
+        req(r_currentPlayer$trigger > 0)
+        print(r_currentPlayer$df)
     })
 })
