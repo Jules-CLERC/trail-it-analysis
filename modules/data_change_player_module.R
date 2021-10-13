@@ -3,9 +3,7 @@ data_change_player_UI <- function(id) {
   ns = NS(id)
   list(
     fluidPage(
-    HTML("<h3>Select and Edit Data</h3>",
-         "<p>Here you can switch which data record is being used,
-         remove records and upload new records.</p>"),
+    HTML("<h3>Select Data</h3>"),
     uiOutput(ns("sessionList"))
     )
   )

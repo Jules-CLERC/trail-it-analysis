@@ -22,6 +22,7 @@ data_select_row_player <- function(input, output, session, playerNameID, profile
   observeEvent(input$actionChoose, {
     toReturn$df <-  profileID
     toReturn$trigger <- toReturn$trigger + 1
+    removeModal()
   })
   
   return(toReturn)

@@ -16,9 +16,10 @@ data_select_player <- function(input, output, session, listPlayers, currentPlaye
   
   output$currentPlayerOutput <- renderText({
     validate(need(currentPlayer(), "No data yet."))
-    listPlayers() %>% 
-      filter("profileID" == currentPlayer()) %>%
-      select(playerName)
+    paste("Data from",
+          listPlayers() %>%
+            filter(profileID == currentPlayer()) %>%
+            select(playerNameID))
   })
   
   ns <- session$ns

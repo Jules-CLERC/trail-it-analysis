@@ -42,6 +42,15 @@ shinyServer(function(input, output) {
                reactive(r_datesPlayers$df))
     callModule(page_times_players, "page_times_players",
                reactive(r_timesGamesPlayers$df))
+    callModule(page_individual_profile_information, "page_individual_profile_information",
+               reactive(r_D$df),
+               reactive(r_currentPlayer$df),
+               reactive(r_listPlayers$df),
+               reactive(r_timesGamesPlayers$df),
+               reactive(r_datesPlayers$df))
+    callModule(page_individual_performance_over_time, "page_individual_performance_over_time",
+               reactive(r_currentPlayer$df),
+               reactive(r_D$df))
     
     #observeEvents
     observeEvent(D$trigger, {

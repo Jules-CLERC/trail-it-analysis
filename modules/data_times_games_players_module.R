@@ -34,11 +34,12 @@ data_times_games_players <- function(input, output, session, D, listPlayers, dat
         count()
       names(nbDaysGamePlayers)[2] <- 'nbDays'
       #minutes
-      nbMinutesGamePlayers = D() %>% 
-        select(profileID, sessionLength) %>%
+      nbMinutesGamePlayers = D() %>%
         group_by(profileID) %>%
-        summarise(sum(sessionLength))
+        distinct(Timestamp, levelTimeTotal) %>%
+        summarise(sum(levelTimeTotal) / 60)
       names(nbMinutesGamePlayers)[2] <- 'nbMinutes'
+
       #merge all in nbTimeGamePlayers
       nbTimeGamePlayers = merge(nbDaysGamePlayers, nbMinutesGamePlayers, "profileID")
       nbTimeGamePlayers = merge(nbTimeGamePlayers, nbYearsGamePlayers, "profileID")
