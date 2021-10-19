@@ -26,11 +26,16 @@ source("modules/page_dates_players_module.R", local = T)
 source("modules/page_times_players_module.R", local = T)
 source("modules/page_improves_players_module.R", local = T)
 source("modules/page_individual_profile_information_module.R", local = T)
+source("modules/page_individual_performance_session_module.R", local = T)
 source("modules/page_individual_performance_over_time_module.R", local = T)
+source("modules/page_trends_statistics_players_module.R", local = T)
+source("modules/page_trends_performance_players_module.R", local = T)
 #plots
 source("modules/plot_minutes_by_player_module.R", local = T)
 source("modules/plot_days_by_player_module.R", local = T)
 source("modules/plot_frequency_year_by_month_player_module.R", local = T)
 source("modules/plot_time_player_module.R", local = T)
+source("modules/plot_reaction_time_player_module.R", local = T)
+source("modules/plot_compare_performance_players_module.R", local = T)
 
 

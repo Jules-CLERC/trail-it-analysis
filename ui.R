@@ -29,7 +29,7 @@ shinyUI(
                                                     div(class="main-content", page_individual_profile_information_UI("page_individual_profile_information"))
                                            ),
                                            tabPanel(value = "Performance session", id = "PerformanceSession", HTML("Performance session<br><small>See overview information.</small>"),
-                                                    div(class="main-content", h1("under construction"))
+                                                    div(class="main-content", page_individual_performance_session_UI("page_individual_performance_session"))
                                            ),
                                            tabPanel(value = "Performance over time", id = "PerformanceOverTime", HTML("Performance over time<br><small>See overview information.</small>"),
                                                     div(class="main-content", page_individual_performance_over_time_UI("page_individual_performance_over_time"))
@@ -37,9 +37,14 @@ shinyUI(
                               )
                      ),
                      tabPanel(title = div(class="text-center", img(src='nav_trends.svg', style="max-width:100%;"),tags$br(),"Trends"),
-                              tabPanel(value = "Under Construction", id = "TrendsOverview", strong("Player Overview"), icon=icon('user'),
-                                       div(class="main-content", tags$p("Under Construction.."))
-                              ),
+                              navlistPanel(id = "analysisChooser", well= FALSE, widths=c(2,10), fluid = FALSE,
+                                           tabPanel(value = "Statistics Players", id = "StatisticsPlayers", HTML("Statistics Players<br><small>See overview information.</small>"),
+                                                    div(class="main-content", page_trends_statistics_players_UI("page_trends_statistics_players"))
+                                           ),
+                                           tabPanel(value = "Performance Players", id = "PerformancePlayers", HTML("Performance Players<br><small>See overview information.</small>"),
+                                                    div(class="main-content", page_trends_performance_players_UI("page_trends_performance_players"))
+                                           )
+                              )
                      )
         ),
         
