@@ -56,6 +56,10 @@ data_import <- function(input, output, session) {
     D = D %>% mutate(Timestamp = paste(date,time),
                      Timestamp = as.POSIXct(Timestamp, format = "%Y-%m-%d %H:%M:%OS")) %>%
       arrange(Timestamp)
+    
+    D = D %>%
+      subset(select = -c(id)) %>%
+      distinct()
 
     toReturn$df <- D
     toReturn$trigger <- toReturn$trigger + 1
