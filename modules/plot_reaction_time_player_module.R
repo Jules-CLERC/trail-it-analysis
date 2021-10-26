@@ -2,65 +2,16 @@ plot_reaction_time_player_UI <- function(id) {
   ns = NS(id)
   
   list(
-    selectInput(ns("gameplay_player_select"),
-                label = "Select gameplay",
-                choices = NULL,
-                selected = NULL),
     fluidRow(class="vis-plot",
-             plotlyOutput(ns("gridPlot")),
+             plotlyOutput(ns("gridPlot"))
     )
   )
 }
 
-plot_reaction_time_player <- function(input, output, session, currentPlayer, D) {
-  
-  currentGameplay <- reactiveValues(df = NULL)
-  
-  observeEvent(currentPlayer(), {
-    if(!is.null(currentPlayer())) {
-      #create list of all gamePlays dates
-      #Get the first level of each gameplay
-      listGameplays = D() %>%
-        filter(profileID == currentPlayer()) %>%
-        filter(eventLabel == "Level 1 Completed!") %>%
-        select(Timestamp)
-      
-      #I need to do a special case when there is only one choice, because otherwise the date is not detected
-      if(nrow(listGameplays["Timestamp"]) == 1) {
-        updateSelectInput(session, "gameplay_player_select",
-                          choices = listGameplays[1,"Timestamp"])
-      }
-      else {
-        updateSelectInput(session, "gameplay_player_select",
-                          choices = listGameplays["Timestamp"])
-      }
-    }
-  })
-  
-  observeEvent(input$gameplay_player_select, {
-      if(input$gameplay_player_select != "") {
-        #get the row of the first level
-        firstLevel <- D() %>%
-          filter(profileID == currentPlayer()) %>%
-          mutate(TimestampString = paste0(Timestamp,"")) %>%
-          filter(TimestampString == input$gameplay_player_select)
-        #get the session results
-        currentGameplay$df <- D() %>%
-          filter(profileID == currentPlayer()) %>%
-          filter(Timestamp >= as.POSIXct(input$gameplay_player_select, format = "%Y-%m-%d %H:%M:%OS"))%>%
-          arrange(Timestamp) %>%
-          mutate(
-            sessionID = ifelse(
-              levelNumber > lag(levelNumber, default = 0), 0, 1
-            ),
-            sessionID = cumsum(sessionID)
-          ) %>%
-          filter(sessionID == 0)
-      }
-  })
+plot_reaction_time_player <- function(input, output, session, currentGameplay) {
   
   output$gridPlot <- renderPlotly({
-    validate(need(currentPlayer(), "Need current player."), errorClass = "vis")
+    validate(need(currentGameplay(), "Need to select a gameplay."), errorClass = "vis")
     
     x_zones = c(1,2,3,1,2,3)
     y_zones = c(1,1,1,2,2,2)
@@ -79,7 +30,7 @@ plot_reaction_time_player <- function(input, output, session, currentPlayer, D) 
                 marker=list(size=128),
                 hoverinfo='none')
     
-    listSessionReactionTime <- currentGameplay$df %>% filter(levelNumber == 1) %>% 
+    listSessionReactionTime <- currentGameplay() %>% filter(levelNumber == 1) %>% 
       select(
         sessionReactionTime_0_0,
         sessionReactionTime_1_0,
