@@ -11,18 +11,6 @@ shinyUI(
         titlePanel("Trail-it analysis"),
         
         navlistPanel(fluid= FALSE, widths=c(1,11), well = FALSE, id = "overall-nav",
-                     # tabPanel(title = div(class="text-center", img(src='nav_trends.svg', style="max-width:100%;"),tags$br(),"Profile information"),
-                     #          page_profile_information_UI("page_profile_information")
-                     # ),
-                     # tabPanel(title = div(class="text-center", img(src='nav_trends.svg', style="max-width:100%;"),tags$br(),"Dates by player"),
-                     #          page_dates_players_UI("page_dates_players")
-                     # ),
-                     # tabPanel(title = div(class="text-center", img(src='nav_trends.svg', style="max-width:100%;"),tags$br(),"Statistics times"),
-                     #          page_times_players_UI("page_times_players")
-                     # ),
-                     # tabPanel(title = div(class="text-center", img(src='nav_trends.svg', style="max-width:100%;"),tags$br(),"Improvements"),
-                     #          page_improves_players_UI("page_improves_players")
-                     # ),
                      tabPanel(title = div(class="text-center", img(src='nav_individual.svg', style="max-width:100%;"),tags$br(),"Individual"),
                               navlistPanel(id = "analysisChooser", well= FALSE, widths=c(2,10), fluid = FALSE,
                                            tabPanel(value = "Profile information", id = "ProfileInformation", HTML("Profile information<br><small>See overview information.</small>"),

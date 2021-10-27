@@ -1,69 +1,34 @@
 page_trends_statistics_players_UI <- function(id) {
   ns = NS(id)
   mainPanel(width = 12,
-            tableOutput(ns("training_time_popularity")),
-            tableOutput(ns("difficulty_popularity")),
-            tableOutput(ns("gamemode_popularity"))
+            checkboxInput(ns("input_strokes_players"), "Only Strokes players", value = FALSE),
+            plot_game_type_pie_UI(ns("plot_game_type_pie")),
+            plot_circle_amount_pie_UI(ns("plot_circle_amount_pie")),
+            plot_session_length_pie_UI(ns("plot_session_length_pie"))
   )
 }
 
 #server function
-page_trends_statistics_players <- function(input, output, session, D, strokesPlayers) {
-  #TODO : put the plots modules
-  output$training_time_popularity<- renderTable({
-    validate(need(D(), "No data."))
-    validate(need(strokesPlayers(), "No data."))
-    
-    onlyStrokePlayer = strokesPlayers() %>%
-      filter(stroke == "stroke")
-
-    DStrokesPlayers = merge(D(), onlyStrokePlayer, "profileID")
-
-    trainingTime = DStrokesPlayers %>%
-      distinct(profileID, sessionLength) %>%
-      group_by(sessionLength) %>%
-      count() %>%
-      ungroup() %>%
-      mutate(popularityPercent = (n / sum(n)) * 100)
-
-    return(trainingTime)
+page_trends_statistics_players <- function(input, output, session, D) {
+  
+  comparePlayers = reactiveValues(df = NULL)
+  
+  toListen <- reactive({
+    list(D(), input$input_strokes_players)
   })
   
-  output$difficulty_popularity<- renderTable({
+  observeEvent(toListen(), {
     validate(need(D(), "No data."))
-    validate(need(strokesPlayers(), "No data."))
-    
-    onlyStrokePlayer = strokesPlayers() %>%
-      filter(stroke == "stroke")
-    
-    DStrokesPlayers = merge(D(), onlyStrokePlayer, "profileID")
-    
-    difficulties = DStrokesPlayers %>%
-      distinct(profileID, circleAmount) %>%
-      group_by(circleAmount) %>%
-      count() %>%
-      ungroup() %>%
-      mutate(popularityPercent = (n / sum(n)) * 100)
-    
-    return(difficulties)
+    if(input$input_strokes_players == TRUE) {
+      comparePlayers$df <- D() %>%
+        filter(!(trainingReason == "OtherReason"))
+    }
+    else {
+      comparePlayers$df <- D()
+    }
   })
   
-  output$gamemode_popularity<- renderTable({
-    validate(need(D(), "No data."))
-    validate(need(strokesPlayers(), "No data."))
-    
-    onlyStrokePlayer = strokesPlayers() %>%
-      filter(stroke == "stroke")
-    
-    DStrokesPlayers = merge(D(), onlyStrokePlayer, "profileID")
-    
-    gamemodes = DStrokesPlayers %>%
-      distinct(profileID, gameType) %>%
-      group_by(gameType) %>%
-      count() %>%
-      ungroup() %>%
-      mutate(popularityPercent = (n / sum(n)) * 100)
-    
-    return(gamemodes)
-  })
+  callModule(plot_game_type_pie, "plot_game_type_pie", reactive(comparePlayers$df))
+  callModule(plot_circle_amount_pie, "plot_circle_amount_pie", reactive(comparePlayers$df))
+  callModule(plot_session_length_pie, "plot_session_length_pie", reactive(comparePlayers$df))
 }

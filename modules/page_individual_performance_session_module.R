@@ -1,12 +1,11 @@
 page_individual_performance_session_UI <- function(id) {
   ns = NS(id)
   mainPanel(width = 12,
-            sliderInput(ns("gameplay_player_slider"), "Select gameplay :", min = 0, max = 1, value = 0),
             selectInput(ns("gameplay_player_select"),
                         label = "Select gameplay",
                         choices = NULL,
                         selected = NULL),
-            plot_reaction_time_player_UI(ns("plot_reaction_time_player")),
+            plot_reaction_time_player_over_time_UI(ns("plot_reaction_time_player_over_time")),
             h3("Reaction time"),
             tableOutput(ns("infos_reaction_time")),
             uiOutput(ns("nb_points_touched"))
@@ -37,8 +36,6 @@ page_individual_performance_session <- function(input, output, session, currentP
         updateSelectInput(session, "gameplay_player_select",
                           choices = listGameplays["Timestamp"])
       }
-      
-      updateSliderInput(session, "gameplay_player_slider", value = listGameplays["Timestamp"], min = listGameplays[1,"Timestamp"], max = listGameplays[5,"Timestamp"], timeFormat = "%Y-%m-%d %H:%M:%OS")
     }
   })
   
@@ -52,7 +49,7 @@ page_individual_performance_session <- function(input, output, session, currentP
       #get the session results
       currentGameplay$df <- D() %>%
         filter(profileID == currentPlayer()) %>%
-        filter(Timestamp >= as.POSIXct(input$gameplay_player_select, format = "%Y-%m-%d %H:%M:%OS"))%>%
+        filter(Timestamp >= as.POSIXct(input$gameplay_player_select, format = "%Y-%m-%d %H:%M:%OS")) %>%
         arrange(Timestamp) %>%
         mutate(
           sessionID = ifelse(
@@ -64,7 +61,7 @@ page_individual_performance_session <- function(input, output, session, currentP
     }
   })
   
-  callModule(plot_reaction_time_player, "plot_reaction_time_player", reactive(currentGameplay$df))
+  callModule(plot_reaction_time_player_over_time, "plot_reaction_time_player_over_time", reactive(currentGameplay$df))
   
   output$infos_reaction_time <- renderTable(colnames = FALSE, {
     validate(need(currentGameplay$df, "No current gameplay"))

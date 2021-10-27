@@ -7,11 +7,11 @@ page_individual_profile_information_UI <- function(id) {
               )
             ),
             fluidRow(
-              column(9,
+              column(7,
                      tags$h3("Player Characteristics"),
                      tableOutput(ns("profile_info"))
               ),
-              column(3,
+              column(5,
                      tags$h3("Play History"),
                      tableOutput(ns("play_history"))
               ),
@@ -49,9 +49,13 @@ page_individual_profile_information <- function(input, output, session, D, curre
         y = as.character(dataPlayer[1, "email"])) %>%
       add_row(
         x = "Last date play:", 
-        y = as.character(paste(
-          dataPlayer[1, "date"], 
-          as.duration(today() - ymd(dataPlayer[1, "date"]))
+        y = as.character(paste0(
+          dataPlayer[1, "date"],
+          " ~",
+          as.numeric(
+            as.duration(today() - ymd(dataPlayer[1, "date"])),"days"
+          ),
+          " day(s)"
         ))) %>%
       add_row(
         x = "Play context:", 
@@ -73,6 +77,9 @@ page_individual_profile_information <- function(input, output, session, D, curre
     
     datesPlayers() %>% 
       filter(profileID == currentPlayer()) %>%
-      select(date)
+      mutate(p_wday = wday(as.character(date), abbr = F, label=T),
+             p_date = format(date(as.character(date)), "%d %b %Y"),
+             p_timestamp = paste(p_wday, p_date)) %>%
+      select(date, p_timestamp)
   })
 }

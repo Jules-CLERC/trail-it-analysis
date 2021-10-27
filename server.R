@@ -31,17 +31,6 @@ shinyServer(function(input, output) {
                                 reactive(r_currentPlayer$df))
     
     #call pages
-    callModule(page_profile_information, "page_profile_information",
-               reactive(r_listPlayers$df),
-               reactive(r_strokesPlayers$df))
-    callModule(page_improves_players, "page_improves_players",
-               reactive(r_listPlayers$df),
-               reactive(r_improvesPlayers$df))
-    callModule(page_dates_players, "page_dates_players",
-               reactive(r_listPlayers$df),
-               reactive(r_datesPlayers$df))
-    callModule(page_times_players, "page_times_players",
-               reactive(r_timesGamesPlayers$df))
     callModule(page_individual_profile_information, "page_individual_profile_information",
                reactive(r_D$df),
                reactive(r_currentPlayer$df),
@@ -55,8 +44,7 @@ shinyServer(function(input, output) {
                reactive(r_currentPlayer$df),
                reactive(r_D$df))
     callModule(page_trends_statistics_players, "page_trends_statistics_players",
-               reactive(r_D$df),
-               reactive(r_strokesPlayers$df))
+               reactive(r_D$df))
     callModule(page_trends_performance_players, "page_trends_performance_players",
                reactive(r_currentPlayer$df),
                reactive(r_D$df),
