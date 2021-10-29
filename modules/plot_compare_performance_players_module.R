@@ -25,52 +25,66 @@ plot_compare_performance_players_UI <- function(id) {
 }
 
 plot_compare_performance_players <- function(input, output, session, currentPlayer, D, listPlayers) {
-
+  
   #Wait for data
   toListen <- reactive({
     list(listPlayers(), currentPlayer())
   })
   observeEvent(toListen(), {
     if(!is.null(listPlayers()) && !is.null(currentPlayer())) {
-      #create list of all players except the current player
-      listComparePlayers <- listPlayers() %>%
-        filter(profileID != currentPlayer())
+      
+      #Get all the combination (gameType, CircleAmount) of the current player
+      combinationsGameplays <- D() %>%
+        filter(profileID == currentPlayer()) %>%
+        distinct(gameType, circleAmount)
+      
+      #get players with a combination similar to the currentPlayer
+      similarCombinationGameplays <- D() %>%
+        filter(profileID != currentPlayer()) %>%
+        distinct(profileID, gameType, circleAmount) %>%
+        merge(combinationsGameplays) %>%
+        distinct(profileID) %>%
+        merge(listPlayers())
+      
+      unsimilarCombinationGameplays <- D() %>%
+        filter(profileID != currentPlayer()) %>%
+        distinct(profileID) %>%
+        anti_join(similarCombinationGameplays, by.x="profileID") %>%
+        merge(listPlayers())
+      
       updateSelectInput(session, "compare_player_select",
-                        choices = listComparePlayers["playerNameID"])
+                        choices = list(
+                          'Similar gameplays' = similarCombinationGameplays[,"playerNameID"],
+                          'Unsimilar gameplays' = unsimilarCombinationGameplays[,"playerNameID"]
+                        ))
       
       #Get types of games played by the currentPlayer
       gameTypePlayer <- D() %>%
         filter(profileID == currentPlayer()) %>%
         distinct(gameType)
-      #I need to do a special case when there is only one choice, because otherwise the choice is not detected
-      if(nrow(gameTypePlayer["gameType"]) == 1) {
-        updateSelectInput(session, "compare_player_gameType_select",
-                          choices = gameTypePlayer[1,"gameType"])
-      }
-      else {
-        updateSelectInput(session, "compare_player_gameType_select",
-                          choices = gameTypePlayer["gameType"])
-      }
+
+      updateSelectInput(session, "compare_player_gameType_select",
+                        choices = gameTypePlayer[,"gameType"])
       
       #Get types of circle amount played by the currentPlayer
       circleAmountPlayer <- D() %>%
         filter(profileID == currentPlayer()) %>%
         distinct(circleAmount)
-      #I need to do a special case when there is only one choice, because otherwise the choice is not detected
-      if(nrow(circleAmountPlayer["circleAmount"]) == 1) {
-        updateSelectInput(session, "compare_player_circleAmount_select",
-                          choices = circleAmountPlayer[1,"circleAmount"])
-      }
-      else {
-        updateSelectInput(session, "compare_player_circleAmount_select",
-                          choices = circleAmountPlayer["circleAmount"])
-      }
+
+      updateSelectInput(session, "compare_player_circleAmount_select",
+                        choices = circleAmountPlayer[,"circleAmount"])
     }
   })
   
   output$plot_compare_performance_players_graph<- renderPlotly({
     validate(need(D(), "Waiting for data."), errorClass = "vis")
     validate(need(currentPlayer(), "No current player."), errorClass = "vis")
+    
+    GameplaysPlayer <- D() %>%
+      filter(profileID == currentPlayer()) %>%
+      filter(gameType == input$compare_player_gameType_select) %>%
+      filter(circleAmount == input$compare_player_circleAmount_select)
+    validate(need(nrow(GameplaysPlayer) > 0, "No data available for these parameters."), errorClass = "vis")
     
     #Check the players selected to the comparison
     listToCompare <- listPlayers() %>% 

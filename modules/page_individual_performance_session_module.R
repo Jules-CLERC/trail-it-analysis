@@ -6,6 +6,8 @@ page_individual_performance_session_UI <- function(id) {
                         choices = NULL,
                         selected = NULL),
             plot_reaction_time_player_over_time_UI(ns("plot_reaction_time_player_over_time")),
+            h3("Type game"),
+            tableOutput(ns("infos_type_game")),
             h3("Reaction time"),
             tableOutput(ns("infos_reaction_time")),
             uiOutput(ns("nb_points_touched"))
@@ -27,15 +29,8 @@ page_individual_performance_session <- function(input, output, session, currentP
         filter(eventLabel == "Level 1 Completed!") %>%
         select(Timestamp)
       
-      #I need to do a special case when there is only one choice, because otherwise the date is not detected
-      if(nrow(listGameplays["Timestamp"]) == 1) {
-        updateSelectInput(session, "gameplay_player_select",
-                          choices = listGameplays[1,"Timestamp"])
-      }
-      else {
-        updateSelectInput(session, "gameplay_player_select",
-                          choices = listGameplays["Timestamp"])
-      }
+      updateSelectInput(session, "gameplay_player_select",
+                        choices = listGameplays[,"Timestamp"])
     }
   })
   
@@ -63,6 +58,26 @@ page_individual_performance_session <- function(input, output, session, currentP
   
   callModule(plot_reaction_time_player_over_time, "plot_reaction_time_player_over_time", reactive(currentGameplay$df))
   
+  #type of game
+  output$infos_type_game <- renderTable(colnames = FALSE, {
+    validate(need(currentGameplay$df, "No current gameplay"))
+    gameType = currentGameplay$df[1, "gameType"]
+    circleAmount = currentGameplay$df[1, "circleAmount"]
+    sessionLength = currentGameplay$df[1, "sessionLength"]
+    
+    table <- tibble(
+      x = "Game type:", 
+      y = gameType) %>%
+      add_row(
+        x = "Circle amount:", 
+        y = toString(circleAmount)) %>%
+      add_row(
+        x = "Session length:", 
+        y = paste(sessionLength, "min"))
+    return(table)
+  })
+  
+  #List reaction time
   output$infos_reaction_time <- renderTable(colnames = FALSE, {
     validate(need(currentGameplay$df, "No current gameplay"))
     bestReactionTime = round(currentGameplay$df[1, "sessionBestReactionTime"], 2)
@@ -81,6 +96,7 @@ page_individual_performance_session <- function(input, output, session, currentP
     return(table)
   })
   
+  #Percentage points touched
   output$nb_points_touched <- renderUI({
     validate(need(currentGameplay$df, "No current gameplay"))
     

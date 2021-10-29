@@ -46,7 +46,8 @@ plot_reaction_time_player_over_time <- function(input, output, session, gameplay
         sessionReactionTime_0_1,
         sessionReactionTime_1_1,
         sessionReactionTime_2_1,
-        sessionID)
+        sessionID,
+        Timestamp)
     
     nbSessions <- nrow(
       listSessionReactionTime %>%
@@ -55,7 +56,8 @@ plot_reaction_time_player_over_time <- function(input, output, session, gameplay
     
     #Create animation
     #Each frame corresponds to a session
-    for (tmpSession in 0:(nbSessions-1)) {
+    for (frame in 1:nbSessions) {
+      tmpSession = listSessionReactionTime[frame, "sessionID"]
       tmpListSessionReactionTime <- listSessionReactionTime %>% filter(sessionID == tmpSession)
       #For each zone, show the reaction time with an indicative color
       for(i in 1:6) {
@@ -68,15 +70,20 @@ plot_reaction_time_player_over_time <- function(input, output, session, gameplay
           tmp_color = 'rgba(242, 152, 11,0.4)'     #Orange
         }
         fig <- fig %>%
-          add_trace(x=x_zones[i], y=y_zones[i], frame=tmpListSessionReactionTime[1,"sessionID"], type='scatter', mode='markers',
+          add_trace(x=x_zones[i], y=y_zones[i], frame=frame, type='scatter', mode='markers',
                     marker=list(size=128, color=tmp_color)) %>%
-          add_trace(x=x_zones[i], y=y_zones[i], frame=tmpListSessionReactionTime[1,"sessionID"], type='scatter', mode='text',
+          add_trace(x=x_zones[i], y=y_zones[i], frame=frame, type='scatter', mode='text',
                     text=tmpSessionReactionTime, textfont = list(color = '#000000', size = 32))
       }
+      #Add date frame in label
+      fig  <- fig %>%
+        add_trace(x=0.5, y=0.5, frame=frame, type='scatter', mode='text', text=tmpListSessionReactionTime[1, "Timestamp"], textposition = 'middle right',
+                  textfont = list(color = '#000000', size = 16))
     }
     
     fig <- fig %>%
-      layout(yaxis=list(titlefont = list(size=0), title=" "), xaxis=list(titlefont = list(size=0), title=" "))
+      layout(yaxis=list(range=c(0.5, 2.5), titlefont = list(size=0), title=" "), 
+             xaxis=list(range=c(0.5, 3.5), titlefont = list(size=0), title=" "))
     
     return(fig)
   })
