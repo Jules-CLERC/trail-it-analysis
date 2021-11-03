@@ -53,17 +53,29 @@ data_import <- function(input, output, session) {
     # Preprocess
     #############
     
+    #Add column Timestamp
     D = D %>% mutate(Timestamp = paste(date,time),
                      Timestamp = as.POSIXct(Timestamp, format = "%Y-%m-%d %H:%M:%OS")) %>%
       arrange(Timestamp)
     
+    #Delete duplicate rows
     D = D %>%
       subset(select = -c(id)) %>%
       distinct()
+    
+    #Add sessionID
+    D = D %>%
+      group_by(profileID) %>%
+      mutate(
+        sessionID = ifelse(
+          levelNumber > lag(levelNumber, default = 0), 0, 1
+        ),
+        sessionID = cumsum(sessionID)
+      ) %>%
+      ungroup()
 
     toReturn$df <- D
     toReturn$trigger <- toReturn$trigger + 1
-    
   })
   
   return(toReturn)

@@ -155,3 +155,34 @@ label {
     margin-bottom: 0;
     font-weight: normal;
 }
+
+#user-image {
+  height: 50px;
+  margin: 10px;
+}
+
+#div-player-name > p {
+  font-size: 15px;
+}
+
+.div-player-performance {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+}
+
+#label-percentage-hits {
+  position: absolute;
+  top: -10px;
+  width: fit-content;
+  border-radius: 20px;
+}
+
+#label-percentage-hits > p {
+  color: white;
+  margin: 7px;
+}
+
+.progress-bar-custom {
+  background-color: rgb(40,176,36);
+}

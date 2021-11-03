@@ -27,10 +27,9 @@ page_individual_performance_session <- function(input, output, session, currentP
       listGameplays = D() %>%
         filter(profileID == currentPlayer()) %>%
         filter(eventLabel == "Level 1 Completed!") %>%
-        select(Timestamp)
-      
+        pull(Timestamp)
       updateSelectInput(session, "gameplay_player_select",
-                        choices = listGameplays[,"Timestamp"])
+                        choices = listGameplays)
     }
   })
   

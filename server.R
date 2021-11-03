@@ -33,10 +33,7 @@ shinyServer(function(input, output) {
     #call pages
     callModule(page_individual_profile_information, "page_individual_profile_information",
                reactive(r_D$df),
-               reactive(r_currentPlayer$df),
-               reactive(r_listPlayers$df),
-               reactive(r_timesGamesPlayers$df),
-               reactive(r_datesPlayers$df))
+               reactive(r_currentPlayer$df))
     callModule(page_individual_performance_session, "page_individual_performance_session",
                reactive(r_currentPlayer$df),
                reactive(r_D$df))
@@ -54,13 +51,6 @@ shinyServer(function(input, output) {
     observeEvent(D$trigger, {
         req(D$trigger > 0)
         r_D$df <- D$df
-        
-        # TODO : Check the players of the milo course
-        # test1 = r_D$df %>%
-        #     filter(substring(playerName, 1, 4) == "MPC-") %>%
-        #     filter(date == "2021-10-15") %>%
-        #     distinct(playerName)
-        # view(test1)
     })
     observeEvent(listPlayers$trigger, {
         req(listPlayers$trigger > 0)

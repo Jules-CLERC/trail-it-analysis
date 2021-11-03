@@ -31,7 +31,7 @@ data_select_player <- function(input, output, session, listPlayers, currentPlaye
   changePlayer <- callModule(data_change_player, "data_change_player", listPlayers)
   observeEvent(changePlayer$trigger, {
     req(changePlayer$trigger > 0)
-    toReturn$df <-  changePlayer$df
+    toReturn$df <-  changePlayer$df$profileID
     toReturn$trigger <- toReturn$trigger + 1
   })
   

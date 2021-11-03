@@ -16,7 +16,6 @@ plot_reaction_time_player_over_time <- function(input, output, session, gameplay
   
   output$gridPlot <- renderPlotly({
     validate(need(gameplaysPlayer(), "Need to select a current player."), errorClass = "vis")
-    
     #Create 6 zones
     x_zones = c(1,2,3,1,2,3)
     y_zones = c(1,1,1,2,2,2)
@@ -61,7 +60,7 @@ plot_reaction_time_player_over_time <- function(input, output, session, gameplay
       tmpListSessionReactionTime <- listSessionReactionTime %>% filter(sessionID == tmpSession)
       #For each zone, show the reaction time with an indicative color
       for(i in 1:6) {
-        tmpSessionReactionTime = round(tmpListSessionReactionTime[1,i], 2)
+        tmpSessionReactionTime = round(tmpListSessionReactionTime[[i]], 2)
         tmp_color = 'rgba (77, 220, 32, 0.4)'      #Green
         if(tmpSessionReactionTime > input$range_colors[2]) {
           tmp_color = 'rgba(240, 77, 66,0.4)'      #Red
@@ -84,7 +83,6 @@ plot_reaction_time_player_over_time <- function(input, output, session, gameplay
     fig <- fig %>%
       layout(yaxis=list(range=c(0.5, 2.5), titlefont = list(size=0), title=" "), 
              xaxis=list(range=c(0.5, 3.5), titlefont = list(size=0), title=" "))
-    
     return(fig)
   })
 }

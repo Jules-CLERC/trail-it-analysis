@@ -11,9 +11,7 @@ page_individual_performance_over_time_UI <- function(id) {
             plot_reaction_time_player_over_time_UI(ns("plot_reaction_time_player_over_time")),
             hr(),
             h1("Play frequency"),
-            plot_time_player_UI(ns("plot_time_player")),
-            h1("Regression"),
-            plotlyOutput(ns("regression_player_graph"))
+            plot_time_player_UI(ns("plot_time_player"))
   )
 }
 
@@ -76,26 +74,4 @@ page_individual_performance_over_time <- function(input, output, session, curren
   
   callModule(plot_reaction_time_player_over_time, "plot_reaction_time_player_over_time", reactive(gameplaysPlayerSelected$df))
   callModule(plot_time_player, "plot_time_player", currentPlayer, D)
-  
-  output$regression_player_graph<- renderPlotly({
-    validate(need(D(), "Waiting for data."), errorClass = "vis")
-    validate(need(currentPlayer(), "No current player."))
-    
-    GameplaysPlayer <- D() %>%
-      filter(profileID == currentPlayer()) %>%
-      filter(gameType == "gameA") %>%
-      filter(circleAmount == 12) %>%
-      filter(eventLabel == "Level 1 Completed!")
-    
-    y <- GameplaysPlayer$Timestamp
-    X <- GameplaysPlayer$sessionMedianReactionTime
-    
-    lm_model <- linear_reg() %>% 
-      set_engine('lm') %>% 
-      set_mode('regression') %>%
-      fit(X,Y) 
-    
-    plot_ly() %>%
-      add_trace(data = GameplaysPlayer, x=~Timestamp, y=~sessionMedianReactionTime, type = 'scatter', mode = 'lines')
-  })
 }

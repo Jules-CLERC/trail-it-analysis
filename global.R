@@ -1,9 +1,9 @@
 ###Libraries
 library(shiny)
 library(shinyjs)
+library(shinyWidgets)
 library(RMySQL)
 library(tidyverse)
-library(tidymodels) # for the fit() function
 library(plotly)
 library(lubridate)
 
