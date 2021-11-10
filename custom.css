@@ -173,16 +173,37 @@ label {
 
 #label-percentage-hits {
   position: absolute;
-  top: -10px;
   width: fit-content;
   border-radius: 20px;
 }
 
 #label-percentage-hits > p {
   color: white;
-  margin: 7px;
+  margin-left: 7px;
+  margin-right: 7px;
+  margin-top: 0px;
+  margin-bottom: 0px;
 }
 
-.progress-bar-custom {
+.progress-bar {
   background-color: rgb(40,176,36);
+}
+
+.progress {
+  border: 2px solid black;
+  border-radius: 15px;
+}
+
+#div-player-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+#div-player-header > div > div > h1 {
+  margin-bottom: 0px;
+}
+
+.div-player-performance > h1 {
+  margin-bottom: 0px;
 }

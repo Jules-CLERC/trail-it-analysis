@@ -1,7 +1,6 @@
 ###Libraries
 library(shiny)
 library(shinyjs)
-library(shinyWidgets)
 library(RMySQL)
 library(tidyverse)
 library(plotly)
@@ -27,6 +26,8 @@ source("modules/page_individual_performance_session_module.R", local = T)
 source("modules/page_individual_performance_over_time_module.R", local = T)
 source("modules/page_trends_statistics_players_module.R", local = T)
 source("modules/page_trends_performance_players_module.R", local = T)
+#modals
+source("modules/modal_individual_profile_dates_module.R", local = T)
 #plots
 source("modules/plot_minutes_by_player_module.R", local = T)
 source("modules/plot_days_by_player_module.R", local = T)
@@ -37,5 +38,6 @@ source("modules/plot_game_type_pie_module.R", local = T)
 source("modules/plot_circle_amount_pie_module.R", local = T)
 source("modules/plot_session_length_pie_module.R", local = T)
 source("modules/plot_compare_performance_players_module.R", local = T)
+source("modules/plot_performance_per_level_module.R", local = T)
 
 
