@@ -4,7 +4,7 @@ page_individual_performance_session_UI <- function(id) {
             div(
               h1("Performance from the last session"),
               hr(),
-              p("this page summarizes the player's performance from the last played session."),
+              p("This page summarizes the player's performance from the last played session."),
               br(),
               fluidRow(
                 column(6,
@@ -74,6 +74,7 @@ page_individual_performance_session <- function(input, output, session, currentP
     return(toReturn)
   })
   
+  #TODO : change the settings for the heat map colors
   output$spatial_performance_ipad <- renderUI({
     validate(need(currentPlayer(), "No current player."))
     

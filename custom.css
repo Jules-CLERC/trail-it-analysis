@@ -207,3 +207,68 @@ label {
 .div-player-performance > h1 {
   margin-bottom: 0px;
 }
+
+.text-ipad {
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+.title-div {
+  font-size: small;
+  text-transform: uppercase;
+}
+
+/* --------- radio buttons ---------*/
+/* Styling of Check-boxes :horizontal */
+
+.radio-inline + .radio-inline {
+  margin-left: 0;
+}
+.form-group input[type="radio"] {
+    display: none;
+}
+
+.form-group input[type="radio"] ~span {
+    background: #efefef;
+    border-radius: 3px 3px 3px 3px;
+    color: #888;
+    border: 1px solid #efefef;
+    padding: 0 3px;
+}
+
+.form-group input[type="radio"]:checked ~span {
+    color: #fff;
+    background-color: #337ab7;
+    border: 1px solid #337ab7;
+}
+
+.form-group input[type="radio"]:hover ~span {
+    border: 1px solid #666;
+    background-color: #4d8fcd;
+}
+
+.form-group input[type="radio"]:hover:not(:checked) ~span {
+    color: #666;
+    border: 1px solid #888;
+    background-color: #bbbdbe;
+}
+
+.radio-inline span {
+    display: inline-block;
+    min-width: 40px;
+    height: 30px;
+    text-align: center;
+    line-height: 30px;
+    cursor: pointer;
+}
+
+.trends-statistics-header-div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.div-tableOutput {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

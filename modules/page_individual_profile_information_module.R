@@ -16,17 +16,17 @@ page_individual_profile_information_UI <- function(id) {
                      uiOutput(ns("player_performance_header"))
               ),
               column(6,
-                     h2("Current treatment progress"),
+                     h5("Current treatment progress", class="title-div"),
                      uiOutput(ns("player_progress_treatment"))
               )
             ),
             fluidRow(
               column(6,
-                     h2("Player characteristics"),
+                     h5("Player characteristics", class="title-div"),
                      uiOutput(ns("player_characteristics"))
               ),
               column(6,
-                     h2("Past play sessions"),
+                     h5("Past play sessions", class="title-div"),
                      uiOutput(ns("player_past_sessions"))
               )
             )

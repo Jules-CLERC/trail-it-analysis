@@ -3,9 +3,9 @@ plot_performance_per_level_UI <- function(id) {
   list(
     fluidRow(
       tags$div(class='contextual-toolbar', 
-               radioButtons(ns("optionFilter"), label = " ",
+               radioButtons(ns("optionFilter"), label = "",
                                   choices = c("Whole level" = "optionAll", "Left/Right" = "optionLR"),
-                                  selected = c("optionAll"), inline = FALSE)
+                                  selected = c("optionAll"), inline = TRUE)
       )
     ),
     fluidRow(
@@ -43,7 +43,7 @@ plot_performance_per_level <- function(input, output, session, currentSession) {
   output$performance_per_level_graph <- renderPlotly({
     validate(need(currentSession(), "Waiting for current session"), errorClass = "vis")
     
-    fig <- plot_ly() %>%
+    fig <- plot_ly(width = '60%') %>%
       layout(
         xaxis = list(title = 'Level'),
         yaxis = list(title = 'Reaction Time'),
