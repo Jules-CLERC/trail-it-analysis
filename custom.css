@@ -267,8 +267,50 @@ label {
   align-items: center;
 }
 
-.div-tableOutput {
+.container-demographics {
+  height: 250px;
+}
+
+#div-tableOutput-playContext {
   display: flex;
   flex-direction: column;
   align-items: center;
+  height: 100%;
+  padding-bottom: 40px;
+}
+
+#div-tableOutput-playContext > div {
+  height: 100%;
+}
+
+#div-tableOutput-playContext > div > table {
+  height: 100%;
+}
+
+#div-tableOutput-playContext > div > table > tbody {
+  height: 100%;
+}
+
+#div-tableOutput-gameType {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  height: 100%;
+}
+
+#div-tableOutput-gameType > div {
+  height: 100%;
+}
+
+#div-tableOutput-gameType > div > table {
+  height: 100%;
+}
+
+#div-tableOutput-gameType > div > table > tbody {
+  height: 100%;
+  display: flex;
+}
+
+.container-trainingPrograms {
+  height: 250px;
 }

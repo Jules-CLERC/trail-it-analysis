@@ -7,6 +7,8 @@ plot_age_median_UI <- function(id) {
 
 plot_age_median <- function(input, output, session, data) {
   
+  toReturn <- reactiveValues(df = NULL)
+  
   output$age_median_graph <- renderPlotly({
     validate(need(data(), "No data."), errorClass = "vis")
     
@@ -42,12 +44,15 @@ plot_age_median <- function(input, output, session, data) {
       filter(range1 <= ageMedian) %>%
       filter(range2 >= ageMedian)
     
+    toReturn$df <- currentRange[1,"ageGroup"]
+    
     fig <- plot_ly(x = ~dataAgeMedian$ageGroup,
-                   type = "histogram")
+                   type = "histogram", height = 250)
     fig <- fig %>% layout(
-      title = paste("AgeMedian:", currentRange[1,"ageGroup"], "years old"),
       xaxis = list(title = ''))
 
     return(fig)
   })
+  
+  return(toReturn)
 }

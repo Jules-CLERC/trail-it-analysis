@@ -24,7 +24,7 @@ page_trends_statistics_players_UI <- function(id) {
                      )
               )
             ),
-            br(),
+            hr(style="border-color: black"),
             fluidRow(
               tags$div(class='contextual-toolbar', 
                        p("Filter by:"),
@@ -40,20 +40,25 @@ page_trends_statistics_players_UI <- function(id) {
             div(
               h1("Demographics"),
               hr(),
+              htmlOutput(ns("outputHeadlineDemographics")),
+              br(),
               fluidRow(
                 column(4,
+                       class="container-demographics",
                        div(
                          plot_age_median_UI(ns("plot_age_median"))
                        )
                 ),
                 column(4,
+                       class="container-demographics",
                        div(
-                         class='div-tableOutput',
+                         id='div-tableOutput-playContext',
                          h5("Play Context", class="title-div"),
                          tableOutput(ns("playContext"))
                        )
                 ),
                 column(4,
+                       class="container-demographics",
                        div(
                          plot_training_reasons_UI(ns("plot_training_reasons"))
                        )
@@ -63,20 +68,22 @@ page_trends_statistics_players_UI <- function(id) {
             div(
               h1("Training Programs"),
               hr(),
+              htmlOutput(ns("outputHeadlineTrainingPrograms")),
+              br(),
+              div(
+                id='div-tableOutput-gameType',
+                h5("Game Type", class="title-div"),
+                tableOutput(ns("gameType"))
+              ),
               fluidRow(
                 column(4,
+                       class="container-trainingPrograms",
                        div(
                          plot_circle_amount_UI(ns("plot_circle_amount"))
                        )
                 ),
                 column(4,
-                       div(
-                         class='div-tableOutput',
-                         h5("Game Type", class="title-div"),
-                         tableOutput(ns("gameType"))
-                       )
-                ),
-                column(4,
+                       class="container-trainingPrograms",
                        div(
                          plot_session_length_UI(ns("plot_session_length"))
                        )
@@ -89,8 +96,12 @@ page_trends_statistics_players_UI <- function(id) {
 #server function
 page_trends_statistics_players <- function(input, output, session, D) {
   
-  filterStatisticsData <- reactiveValues(df = NULL)
-  trainingProgramsData <- reactiveValues(df = NULL)
+  filterStatisticsData <- reactiveValues(df = NULL,
+                                         ageMedian = NULL,
+                                         trainingReason = NULL,
+                                         circleAmount = NULL,
+                                         gameType = NULL,
+                                         sessionLength = NULL)
   
   output$outputNbPlayers <- renderText({
     validate(need(D(), "No data."))
@@ -120,7 +131,19 @@ page_trends_statistics_players <- function(input, output, session, D) {
     return(nbStrokePatients[[1]])
   })
   
-  callModule(plot_age_median, "plot_age_median", reactive(filterStatisticsData$df))
+  output$outputHeadlineDemographics <- renderText({
+    validate(need(D(), "No data."))
+    toReturn <- paste0("The age median for this group is <b>", 
+                      filterStatisticsData$ageMedian$df, 
+                      "</b> years old (n=<b>",
+                      filterStatisticsData$df %>% distinct(profileID) %>% count(),
+                      "</b>), playing to train <b>",
+                      filterStatisticsData$trainingReason$df,
+                      "</b>.")
+    return(toReturn)
+  })
+  
+  filterStatisticsData$ageMedian <- callModule(plot_age_median, "plot_age_median", reactive(filterStatisticsData$df))
   
   output$playContext <- renderTable({
     validate(need(filterStatisticsData$df, "No data."))
@@ -131,11 +154,23 @@ page_trends_statistics_players <- function(input, output, session, D) {
       count() %>%
       arrange(desc(n))
     return(listPlayContext)
-  }, colnames = FALSE, striped = TRUE)
+  }, colnames = FALSE, striped = TRUE, spacing = "l", bordered = TRUE, align = "c")
   
-  callModule(plot_training_reasons, "plot_training_reasons", reactive(filterStatisticsData$df))
+  filterStatisticsData$trainingReason <- callModule(plot_training_reasons, "plot_training_reasons", reactive(filterStatisticsData$df))
   
-  callModule(plot_circle_amount, "plot_circle_amount", reactive(filterStatisticsData$df))
+  output$outputHeadlineTrainingPrograms <- renderText({
+    validate(need(D(), "No data."))
+    toReturn <- paste0("Most players in the group is playing with <b>",
+                       filterStatisticsData$circleAmount$df,
+                       " circles</b> for <b>",
+                       filterStatisticsData$sessionLength$df,
+                       " minutes</b> in game type <b>",
+                       filterStatisticsData$gameType,
+                       "</b>.")
+    return(toReturn)
+  })
+  
+  filterStatisticsData$circleAmount <- callModule(plot_circle_amount, "plot_circle_amount", reactive(filterStatisticsData$df))
   
   output$gameType <- renderTable({
     validate(need(filterStatisticsData$df, "No data."))
@@ -154,10 +189,16 @@ page_trends_statistics_players <- function(input, output, session, D) {
       group_by(gameType) %>%
       count() %>%
       arrange(desc(n))
+    
+    popularGameType <- listGameType %>%
+      ungroup() %>%
+      filter(n == max(n))
+    filterStatisticsData$gameType <- popularGameType$gameType
+    
     return(listGameType)
   }, colnames = FALSE, striped = TRUE)
   
-  callModule(plot_session_length, "plot_session_length", reactive(filterStatisticsData$df))
+  filterStatisticsData$sessionLength <- callModule(plot_session_length, "plot_session_length", reactive(filterStatisticsData$df))
   
   toListen <- reactive({
     list(D(), input$optionFilter)
