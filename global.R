@@ -3,8 +3,10 @@ library(shiny)
 library(shinyjs)
 library(RMySQL)
 library(tidyverse)
+library(tidymodels)
 library(plotly)
 library(lubridate)
+library(htmlwidgets)
 
 ###Options
 options("digits.secs"=6)
@@ -27,11 +29,14 @@ source("modules/modal_individual_profile_dates_module.R", local = T)
 #plots
 source("modules/plot_time_player_module.R", local = T)
 source("modules/plot_reaction_time_player_over_time_module.R", local = T)
-source("modules/plot_compare_performance_players_module.R", local = T)
 source("modules/plot_performance_per_level_module.R", local = T)
+source("modules/plot_timeline_module.R", local = T)
 source("modules/plot_age_median_module.R", local = T)
 source("modules/plot_training_reasons_module.R", local = T)
 source("modules/plot_circle_amount_module.R", local = T)
 source("modules/plot_session_length_module.R", local = T)
+source("modules/plot_group_performance_comparison_scatter_module.R", local = T)
+source("modules/plot_group_performance_comparison_histogram_module.R", local = T)
+source("modules/plot_individual_comparison_module.R", local = T)
 
 

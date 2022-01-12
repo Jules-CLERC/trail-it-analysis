@@ -26,16 +26,33 @@ page_trends_statistics_players_UI <- function(id) {
             ),
             hr(style="border-color: black"),
             fluidRow(
-              tags$div(class='contextual-toolbar', 
-                       p("Filter by:"),
-                       checkboxGroupInput(ns("optionFilter"), label = "",
-                                          choices = c(
-                                            "Patient" = "selectPatients", 
-                                            "Outpatients" = "selectOutPatients",
-                                            "Other Players" = "selectOtherPlayers", 
-                                            "Reference Players" = "selectReferencePlayers"),
-                                          selected = c("selectPatients"), inline = TRUE)
+              tags$div(class='contextual-toolbar',
+                       div(
+                         p("Filter players", class="title-div"),
+                         checkboxGroupInput(ns("optionFilter"), label = "",
+                                            choices = c(
+                                              "Patient" = "selectPatients", 
+                                              "Outpatients" = "selectOutPatients",
+                                              "Other Players" = "selectOtherPlayers", 
+                                              "Reference Players" = "selectReferencePlayers"),
+                                            selected = c("selectPatients", "selectOutPatients"), inline = TRUE),
+                         h5(class="error-text", textOutput(ns("errorTextOptionFilter")))
+                       ),
+                       div(
+                         p("Filter game type", class="title-div"),
+                         checkboxGroupInput(ns("optionGameType"), label = "",
+                                            choices = c(
+                                              "1-2-3-4" = "gameA", 
+                                              "1-A-2-B" = "gameB"),
+                                            selected = c("gameA", "gameB"), inline = TRUE),
+                         h5(class="error-text", textOutput(ns("errorTextOptionGameType")))
+                       )
               )
+            ),
+            div(
+              h1("Timeline"),
+              hr(),
+              plot_timeline_UI(ns("plot_timeline"))
             ),
             div(
               h1("Demographics"),
@@ -94,7 +111,7 @@ page_trends_statistics_players_UI <- function(id) {
 }
 
 #server function
-page_trends_statistics_players <- function(input, output, session, D) {
+page_trends_statistics_players <- function(input, output, session, D, currentPlayer) {
   
   filterStatisticsData <- reactiveValues(df = NULL,
                                          ageMedian = NULL,
@@ -130,6 +147,20 @@ page_trends_statistics_players <- function(input, output, session, D) {
       count()
     return(nbStrokePatients[[1]])
   })
+  
+  output$errorTextOptionFilter <- renderText({
+    if(length(input$optionFilter) == 0) {
+      return("You need to select a Filter Players.")
+    }
+  })
+  
+  output$errorTextOptionGameType <- renderText({
+    if(length(input$optionGameType) == 0) {
+      return("You need to select a Filter game type.")
+    }
+  })
+  
+  callModule(plot_timeline, "plot_timeline", reactive(filterStatisticsData$df), currentPlayer)
   
   output$outputHeadlineDemographics <- renderText({
     validate(need(D(), "No data."))
@@ -201,10 +232,13 @@ page_trends_statistics_players <- function(input, output, session, D) {
   filterStatisticsData$sessionLength <- callModule(plot_session_length, "plot_session_length", reactive(filterStatisticsData$df))
   
   toListen <- reactive({
-    list(D(), input$optionFilter)
+    list(D(), input$optionFilter, input$optionGameType)
   })
   observeEvent(toListen(), {
     validate(need(D(), "No data."))
+    
+    validate(need(length(input$optionFilter) > 0, "No players selected."))
+    validate(need(length(input$optionGameType) > 0, "No game type selected."))
     
     #Create list that contains all profileID Select
     listProfileIdSelect <- data.frame(matrix(ncol = 1, nrow = 0))
@@ -243,7 +277,8 @@ page_trends_statistics_players <- function(input, output, session, D) {
     }
     if(nrow(listProfileIdSelect) > 0) {
       #Get datas for the listProfileIdSelect
-      filterStatisticsData$df <- merge(D(), listProfileIdSelect)
+      filterStatisticsData$df <- merge(D(), listProfileIdSelect) %>%
+        filter(!is.na(match(gameType, input$optionGameType)))
     }
     else {
       filterStatisticsData$df <- NULL

@@ -23,11 +23,11 @@ shinyServer(function(input, output) {
                reactive(r_currentPlayer$df),
                reactive(r_D$df))
     callModule(page_trends_statistics_players, "page_trends_statistics_players",
-               reactive(r_D$df))
+               reactive(r_D$df),
+               reactive(r_currentPlayer$df))
     callModule(page_trends_performance_players, "page_trends_performance_players",
                reactive(r_currentPlayer$df),
-               reactive(r_D$df),
-               reactive(r_listPlayers$df))
+               reactive(r_D$df))
     
     #observeEvents
     observeEvent(D$trigger, {

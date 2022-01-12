@@ -27,16 +27,14 @@ data_import <- function(input, output, session) {
     #############
     
     credentials <- read.csv("credentials.csv", header=TRUE,sep=",", colClasses=c("character","character","character","character"))
-    
     lapply( dbListConnections( dbDriver( drv = "MySQL")), dbDisconnect)
-    
     
     mydb = dbConnect(MySQL(),
                      user=credentials[1, "username"],
                      password=credentials[1, "password"],
                      dbname=credentials[1, "dbname"],
                      host=credentials[1, "host"])
-    
+
     RetreiveDataSet <- function(tablename) {
       queryString = "SELECT *"
       queryString = paste(queryString, "FROM",tablename, sep = " ")
@@ -48,7 +46,6 @@ data_import <- function(input, output, session) {
     }
     
     D <- RetreiveDataSet(credentials[1, "table"])
-    
     #############
     # Preprocess
     #############
@@ -62,6 +59,10 @@ data_import <- function(input, output, session) {
     D = D %>%
       subset(select = -c(id)) %>%
       distinct()
+    
+    #Remove negative reaction time
+    D = D %>%
+      filter(levelReactionTime > 0)
     
     #Add sessionID
     D = D %>%

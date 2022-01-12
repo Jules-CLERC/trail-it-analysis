@@ -71,14 +71,13 @@ footer {
 }
 
 .shiny-output-error-vis {
-
     color: #888;
     text-align: center;
     width: 100%;
     padding-top: 5em;
     background-color: #EFEFEF;
     background: no-repeat center url("placeholder-graph.svg");
-    min-height: 300px;
+    min-height: 250px;
     border: 1px solid lightgrey;
 }
 
@@ -271,6 +270,10 @@ label {
   height: 250px;
 }
 
+.container-demographics > div > div > div {
+  height: 250px !important;
+}
+
 #div-tableOutput-playContext {
   display: flex;
   flex-direction: column;
@@ -313,4 +316,12 @@ label {
 
 .container-trainingPrograms {
   height: 250px;
+}
+
+.container-trainingPrograms > div > div > div {
+  height: 250px !important;
+}
+
+.error-text {
+  color: red;
 }
