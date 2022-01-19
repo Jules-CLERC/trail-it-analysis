@@ -78,6 +78,6 @@ data_import <- function(input, output, session) {
     toReturn$df <- D
     toReturn$trigger <- toReturn$trigger + 1
   })
-  
+
   return(toReturn)
 }

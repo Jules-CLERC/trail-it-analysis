@@ -21,8 +21,6 @@ plot_group_performance_comparison_scatter <- function(input, output, session, da
     oldKey = ''
   )
   
-  end = TRUE
-  
   getOpacity <- function(key) {
     if(layers$layersDict[key] == 'y1') {
       return(1)
@@ -44,7 +42,7 @@ plot_group_performance_comparison_scatter <- function(input, output, session, da
   output$group_performance_comparison_scatter_graph <- renderPlotly({
     validate(need(data(), "No data."), errorClass = "vis")
     validate(need(currentPlayer(), "No current player."), errorClass = "vis")
-    
+
     #Get the data of the current player
     currentPlayerData <- data() %>%
       filter(profileID == currentPlayer()) %>%
@@ -61,7 +59,7 @@ plot_group_performance_comparison_scatter <- function(input, output, session, da
         day = round(as.numeric(difftime(date, min(date), units = c("days"))))
       )
     supsmuCurrentPlayer <- supsmu(currentPlayerData$day, currentPlayerData$sessionMedianReactionTime, bass= 10)
-    
+
     #Get the data of the patients
     patientsData <- data() %>%
       filter(trainingReason != "OtherReason") %>%
@@ -77,7 +75,7 @@ plot_group_performance_comparison_scatter <- function(input, output, session, da
       )
     supsmuPatients <- supsmu(patientsData$day, patientsData$sessionMedianReactionTime, bass= 10)
     toReturn$meanPatientsReactionTime = mean(supsmuPatients$y)
-    
+
     #Get the data of the non patients
     nonPatientsData <- data() %>%
       filter(trainingReason == "OtherReason") %>%
@@ -93,7 +91,7 @@ plot_group_performance_comparison_scatter <- function(input, output, session, da
       )
     supsmuNonPatients <- supsmu(nonPatientsData$day, nonPatientsData$sessionMedianReactionTime, bass= 10)
     toReturn$meanNonPatientsReactionTime = mean(supsmuNonPatients$y)
-    
+
     #Get the data of the MPC players
     mpcData <- data() %>%
       filter(substring(playerName, 1, 4) == "MPC-") %>%
@@ -102,9 +100,9 @@ plot_group_performance_comparison_scatter <- function(input, output, session, da
         mean = mean(sessionMedianReactionTime)
       )
     toReturn$meanReference <- mpcData$mean
-    
+
     #Start config plot
-    fig <- plot_ly(showlegend = FALSE, source = "layerTraces") %>% 
+    fig <- plot_ly(showlegend = FALSE, source = "layerTraces") %>%
       layout(
         yaxis = list(
           range=c(0,8),
@@ -114,7 +112,7 @@ plot_group_performance_comparison_scatter <- function(input, output, session, da
           range=c(0,8)
         )
       )
-    
+
     #Add events on click
     eventData <- event_data(event = "plotly_click", source = "layerTraces")
     if (!is.null(eventData$key) && layers$oldKey != eventData$key[[1]]) {
@@ -127,15 +125,15 @@ plot_group_performance_comparison_scatter <- function(input, output, session, da
       }
       layers$oldKey = keyData
     }
-    
+
     #x limit corresponds to the max x of the data (patients & non patients)
     maxNonPatients <- max(nonPatientsData$day)
     maxPatients <- max(patientsData$day)
     xMax <- max(maxNonPatients, maxPatients) + 100
-    
+
     #Human limit figs
     humanLimit  = 0.25
-    fig <- fig %>% add_segments(x = 0, xend = xMax, y = humanLimit, yend = humanLimit, color = I("red"), 
+    fig <- fig %>% add_segments(x = 0, xend = xMax, y = humanLimit, yend = humanLimit, color = I("red"),
                                 key = 'layerHumanLimit', yaxis = layers$layersDict['layerHumanLimit'], opacity = getOpacity('layerHumanLimit'))
     fig <- fig %>% add_annotations(x = xMax,
                                    y = humanLimit,
@@ -153,7 +151,7 @@ plot_group_performance_comparison_scatter <- function(input, output, session, da
                                    font = list(color = 'white',
                                                family = 'Helvetica Neue',
                                                size = 14))
-    
+
     #MPC reference figs
     fig <- fig %>% add_segments(x = 0, xend = xMax, y = mpcData$mean, yend = mpcData$mean, color = I("green"), key = 'layerReference', yaxis = layers$layersDict['layerReference'], opacity = getOpacity('layerReference'))
     fig <- fig %>% add_annotations(x = xMax,
@@ -172,7 +170,7 @@ plot_group_performance_comparison_scatter <- function(input, output, session, da
                                    font = list(color = 'white',
                                                family = 'Helvetica Neue',
                                                size = 14))
-    
+
     #Patients figs
     fig <- fig %>% add_trace(x = supsmuPatients$x, y = supsmuPatients$y, type = 'scatter', mode = 'lines', line = list(shape = "spline", color = 'blue'), key = 'layerPatients', yaxis = layers$layersDict['layerPatients'], opacity = getOpacity('layerPatients'))
     fig <- fig %>% add_trace(x = patientsData$day, y = patientsData$sessionMedianReactionTime, type = 'scatter', mode = 'markers', opacity = getOpacity('layerPatients') / 3, marker = list(color = 'blue'), key = 'layerPatients', yaxis = layers$layersDict['layerPatients'])
@@ -192,7 +190,7 @@ plot_group_performance_comparison_scatter <- function(input, output, session, da
                                    font = list(color = 'white',
                                                family = 'Helvetica Neue',
                                                size = 14))
-    
+
     #Non patients figs
     fig <- fig %>% add_trace(x = supsmuNonPatients$x, y = supsmuNonPatients$y, type = 'scatter', mode = 'lines', line = list(shape = "spline", color = 'black'), key = 'layerNonPatients', yaxis = layers$layersDict['layerNonPatients'], opacity = getOpacity('layerNonPatients'))
     fig <- fig %>% add_trace(x = nonPatientsData$day, y = nonPatientsData$sessionMedianReactionTime, type = 'scatter', mode = 'markers', opacity = getOpacity('layerNonPatients') / 3, marker = list(color = 'black'), key = 'layerNonPatients', yaxis = layers$layersDict['layerNonPatients'])
@@ -212,7 +210,7 @@ plot_group_performance_comparison_scatter <- function(input, output, session, da
                                    font = list(color = 'white',
                                                family = 'Helvetica Neue',
                                                size = 14))
-    
+
     #Current player figs
     fig <- fig %>% add_trace(x = supsmuCurrentPlayer$x, y = supsmuCurrentPlayer$y, type = 'scatter', mode = 'lines', line = list(shape = "spline", color = 'orange'), key = 'layerCurrentPlayer', yaxis = layers$layersDict['layerCurrentPlayer'], opacity = getOpacity('layerCurrentPlayer'))
     fig <- fig %>% add_annotations(x = tail(supsmuCurrentPlayer$x, 1),
@@ -229,7 +227,7 @@ plot_group_performance_comparison_scatter <- function(input, output, session, da
                                    font = list(color = 'white',
                                                family = 'Helvetica Neue',
                                                size = 14))
-    
+
     return(fig)
   })
   
