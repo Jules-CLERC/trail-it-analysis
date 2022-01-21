@@ -1,35 +1,36 @@
 shinyUI(
-    dashboardPage(
-        dashboardHeader(
-            title = "Trail-it analysis"
+    fluidPage(
+        includeCSS("custom.css"),
+        useShinyjs(),
+        tags$header(fluidRow(
+            column(1, div(class="text-center",img(src='icon.jpeg', style="height:50px;"))),
+            column(10, data_select_player_UI("data_select_player"))
+        )),
+        
+        titlePanel("Trail-it analysis"),
+        
+        navlistPanel(fluid= FALSE, widths=c(1,11), well = FALSE, id = "overall-nav",
+                     tabPanel(title = div(class="text-center", img(src='nav_individual.svg', style="max-width:100%;"),tags$br(),"Individual"),
+                              navlistPanel(id = "analysisChooser", well= FALSE, widths=c(2,10), fluid = FALSE,
+                                           tabPanel(value = "Profile information", id = "ProfileInformation", HTML("Profile information<br><small>See overview information.</small>"),
+                                                    div(class="main-content", page_individual_profile_information_UI("page_individual_profile_information"))
+                                           ),
+                                           tabPanel(value = "Performance session", id = "PerformanceSession", HTML("Performance session<br><small>See overview information.</small>"),
+                                                    div(class="main-content", page_individual_performance_session_UI("page_individual_performance_session"))
+                                           )
+                              )
+                     ),
+                     tabPanel(title = div(class="text-center", img(src='nav_trends.svg', style="max-width:100%;"),tags$br(),"Trends"),
+                              navlistPanel(id = "analysisChooser", well= FALSE, widths=c(2,10), fluid = FALSE,
+                                           tabPanel(value = "Statistics Players", id = "StatisticsPlayers", HTML("Statistics Players<br><small>See overview information.</small>"),
+                                                    div(class="main-content", page_trends_statistics_players_UI("page_trends_statistics_players"))
+                                           ),
+                                           tabPanel(value = "Performance Players", id = "PerformancePlayers", HTML("Performance Players<br><small>See overview information.</small>"),
+                                                    div(class="main-content", page_trends_performance_players_UI("page_trends_performance_players"))
+                                           )
+                              )
+                     )
         ),
-        dashboardSidebar(
-            sidebarMenu(
-                menuItem("Home", tabName = "Home", icon = icon("home")),
-                menuItem("Dates by player", tabName = "Dates_players", icon = icon("calendar")),
-                menuItem("Statistics times", tabName = "Times_players", icon = icon("clock")),
-                menuItem("Improvements", tabName = "Improve_players", icon = icon("chart-line"))
-            )
-        ),
-        dashboardBody(
-            tabItems(
-                tabItem("Home",
-                    fluidPage(
-                        calc_nb_players_UI("nb_players"),
-                        calc_strokes_players_UI("strokes_players")
-                    )
-                ),
-                tabItem("Dates_players",
-                    fluidPage(calc_dates_players_UI("dates_players"))
-                    
-                ),
-                tabItem("Times_players",
-                    fluidPage(calc_times_players_UI("times_players"))
-                ),
-                tabItem("Improve_players",
-                    fluidPage(calc_improve_players_UI("improve_players"))
-                )
-            )
-        )
-    )
-)
+        
+        tags$footer()
+    ))

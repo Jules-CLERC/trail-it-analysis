@@ -1,0 +1,301 @@
+body {
+    padding-top: 15px;
+}
+
+header {
+  margin-bottom: 25px;
+}
+
+}
+#sidebar {
+    max-width: 250px;
+}
+
+#overall-nav {
+    min-width: 7.2rem;
+    font-size: 1.1rem;
+}
+
+button#visButton {
+    margin-top: 20px;
+}
+
+.vis-plot {
+  max-width: 700px;
+}
+
+.mini-progress-bar {
+	background-color: #e0e0e0;
+	padding: 2px;
+	border-radius: 2px;
+}
+
+.mini-progress-bar-fill {
+	display: block;
+	height: 12px;
+	background-color: #659cef;
+	border-radius: 2px;
+}
+
+.tab-content {
+    min-height: 50%;
+}
+
+.tab-content .nav a {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+footer {
+    background: no-repeat url("hmi-lab.svg");
+    height: 50px;
+    margin-top: 15px;
+    width: 100%;
+    display: inline-block;
+}
+
+.d-inline-block {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.separated {
+  margin-right: 12px;
+  margin-left: 12px;
+}
+
+.contextual-toolbar > * {
+  float: left;
+  margin: 0 24px;
+}
+
+.shiny-output-error-vis {
+    color: #888;
+    text-align: center;
+    width: 100%;
+    padding-top: 5em;
+    background-color: #EFEFEF;
+    background: no-repeat center url("placeholder-graph.svg");
+    min-height: 250px;
+    border: 1px solid lightgrey;
+}
+
+.vizcontrols-explainer {
+    background: no-repeat url("pan-zoom.svg");
+    height: 35px;
+    width: 100%;
+    display: inline-block;
+}
+
+.tab-pane > .main-content {
+    height: 77vh;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+.navbar-brand {
+    font-size: 12px;
+    padding: 15px 0px;
+}
+
+/* Styling of Check-boxes :horizontal */
+.checkbox-inline, .radio-inline {
+    padding: 0;
+    padding-top: 2px;
+}
+
+.checkbox-inline + .checkbox-inline {
+  margin-left: 0;
+}
+.form-group input[type="checkbox"] {
+    display: none;
+}
+
+.form-group input[type="checkbox"] ~span {
+    background: #efefef;
+    border-radius: 3px 3px 3px 3px;
+    color: #888;
+    border: 1px solid #efefef;
+    padding: 0 3px;
+}
+
+.form-group input[type="checkbox"]:checked ~span {
+    color: #fff;
+    background-color: #337ab7;
+    border: 1px solid #337ab7;
+}
+
+.form-group input[type="checkbox"]:hover ~span {
+    border: 1px solid #666;
+    background-color: #4d8fcd;
+}
+
+.form-group input[type="checkbox"]:hover:not(:checked) ~span {
+    color: #666;
+    border: 1px solid #888;
+    background-color: #bbbdbe;
+}
+
+.checkbox-inline span {
+    display: inline-block;
+    min-width: 40px;
+    height: 30px;
+    text-align: center;
+    line-height: 30px;
+    cursor: pointer;
+}
+
+.form-group > label {
+  display: none;
+}
+
+label {
+    margin-bottom: 0;
+    font-weight: normal;
+}
+
+#user-image {
+  height: 50px;
+  margin: 10px;
+}
+
+#div-player-name > p {
+  font-size: 15px;
+}
+
+#label-percentage-hits {
+  position: absolute;
+  width: fit-content;
+  border-radius: 20px;
+}
+
+#label-percentage-hits > p {
+  color: white;
+  margin-left: 7px;
+  margin-right: 7px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+.progress-bar {
+  background-color: rgb(40,176,36);
+}
+
+.progress {
+  border: 2px solid black;
+  border-radius: 15px;
+}
+
+.text-ipad {
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+.title-div {
+  font-size: small;
+  text-transform: uppercase;
+}
+
+/* --------- radio buttons ---------*/
+/* Styling of Check-boxes :horizontal */
+
+.radio-inline + .radio-inline {
+  margin-left: 0;
+}
+.form-group input[type="radio"] {
+    display: none;
+}
+
+.form-group input[type="radio"] ~span {
+    background: #efefef;
+    border-radius: 3px 3px 3px 3px;
+    color: #888;
+    border: 1px solid #efefef;
+    padding: 0 3px;
+}
+
+.form-group input[type="radio"]:checked ~span {
+    color: #fff;
+    background-color: #337ab7;
+    border: 1px solid #337ab7;
+}
+
+.form-group input[type="radio"]:hover ~span {
+    border: 1px solid #666;
+    background-color: #4d8fcd;
+}
+
+.form-group input[type="radio"]:hover:not(:checked) ~span {
+    color: #666;
+    border: 1px solid #888;
+    background-color: #bbbdbe;
+}
+
+.radio-inline span {
+    display: inline-block;
+    min-width: 40px;
+    height: 30px;
+    text-align: center;
+    line-height: 30px;
+    cursor: pointer;
+}
+
+.container-demographics {
+  height: 250px;
+}
+
+.container-demographics > div > div > div {
+  height: 250px !important;
+}
+
+#div-tableOutput-playContext {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  padding-bottom: 40px;
+}
+
+#div-tableOutput-playContext > div {
+  height: 100%;
+}
+
+#div-tableOutput-playContext > div > table {
+  height: 100%;
+}
+
+#div-tableOutput-playContext > div > table > tbody {
+  height: 100%;
+}
+
+#div-tableOutput-gameType {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  height: 100%;
+}
+
+#div-tableOutput-gameType > div {
+  height: 100%;
+}
+
+#div-tableOutput-gameType > div > table {
+  height: 100%;
+}
+
+#div-tableOutput-gameType > div > table > tbody {
+  height: 100%;
+  display: flex;
+}
+
+.container-trainingPrograms {
+  height: 250px;
+}
+
+.container-trainingPrograms > div > div > div {
+  height: 250px !important;
+}
+
+.error-text {
+  color: red;
+}

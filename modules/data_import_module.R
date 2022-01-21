@@ -6,9 +6,7 @@ data_import <- function(input, output, session) {
   #############
   
   credentials <- read.csv("credentials.csv", header=TRUE,sep=",", colClasses=c("character","character","character","character"))
-  
   lapply( dbListConnections( dbDriver( drv = "MySQL")), dbDisconnect)
-  
   
   mydb = dbConnect(MySQL(),
                    user=credentials[1, "username"],
@@ -27,19 +25,34 @@ data_import <- function(input, output, session) {
   }
   
   D <- RetreiveDataSet(credentials[1, "table"])
-  
   #############
   # Preprocess
   #############
   
+  #Add column Timestamp
   D = D %>% mutate(Timestamp = paste(date,time),
                    Timestamp = as.POSIXct(Timestamp, format = "%Y-%m-%d %H:%M:%OS")) %>%
     arrange(Timestamp)
   
-  toReturn <- reactiveValues(
-    variable = D,
-    variable_name = "resultDatabase",
-    trigger = 0
-  )
-  return(toReturn)
+  #Delete duplicate rows
+  D = D %>%
+    subset(select = -c(id)) %>%
+    distinct()
+  
+  #Remove negative reaction time
+  D = D %>%
+    filter(levelReactionTime > 0)
+  
+  #Add sessionID
+  D = D %>%
+    group_by(profileID) %>%
+    mutate(
+      sessionID = ifelse(
+        levelNumber > lag(levelNumber, default = 0), 0, 1
+      ),
+      sessionID = cumsum(sessionID)
+    ) %>%
+    ungroup()
+  
+  return(D)
 }

@@ -1,0 +1,21 @@
+svg ipad
+<svg xmlns='http://www.w3.org/2000/svg' width='554.4' height='336.8' viewBox='0 0 146.7 89.1'>
+  <g transform='translate(-36 -90.3)'>
+    <rect width='76.8' height='122.7' x='-173.2' y='42.7' fill='none' stroke='#a7a7a7' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.7' rx='2.7' ry='2.7' transform='rotate(-90)'></rect>
+    <circle cx='173' cy='134.2' r='3.6' fill='none' stroke='#a7a7a7' stroke-linejoin='round' stroke-width='1.1'></circle>
+    <rect width='87.6' height='145.2' x='-178.6' y='36.8' fill='none' stroke='#a7a7a7' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' rx='2.7' ry='2.7' transform='rotate(-90)'></rect>
+    <path fill='#a4f9cd' stroke='#a7a7a7' stroke-linecap='round' stroke-linejoin='round' stroke-width='.9' d='M42.2 96.5h40.9V135H42.2z'></path>
+    <path fill='#a4f1f9' stroke='#a7a7a7' stroke-linecap='round' stroke-linejoin='round' stroke-width='.9' d='M42.2 135.1h40.9v38.5H42.2z'></path>
+    <path fill='#f9d6a4' stroke='#a7a7a7' stroke-linecap='round' stroke-linejoin='round' stroke-width='.9' d='M83.5 96.5h40.9V135H83.5z'></path>
+    <path fill='#acf9a4' stroke='#a7a7a7' stroke-linecap='round' stroke-linejoin='round' stroke-width='.9' d='M83.5 135.1h40.9v38.5H83.5z'></path>
+    <path fill='#6955dc' stroke='#a7a7a7' stroke-linecap='round' stroke-linejoin='round' stroke-width='.9' d='M124.2 96.5h40.9V135h-40.9z'></path>
+    <path fill='none' stroke='#a7a7a7' stroke-linecap='round' stroke-linejoin='round' stroke-width='.9' d='M124.2 135.1h40.9v38.5h-40.9z'></path>
+    <text class='text-ipad' xml:space='preserve' x='62.1' y='118.6' fill='#767676' stroke-width='.3' font-family='Source Sans Pro' font-size='6.4' letter-spacing='0' style='line-height:1.25;-inkscape-font-specification:'Source Sans Pro, Normal';text-align:center' text-anchor='middle' word-spacing='0'><tspan x='62.1' y='118.6'>{1}</tspan></text>
+    <text class='text-ipad' xml:space='preserve' x='103.9' y='117.8' fill='#767676' stroke-width='.3' font-family='Source Sans Pro' font-size='6.4' letter-spacing='0' style='line-height:1.25;-inkscape-font-specification:'Source Sans Pro, Normal';text-align:center' text-anchor='middle' word-spacing='0'><tspan x='103.9' y='117.8'>{2}</tspan></text>
+    <path fill='#f9a4a4' stroke='#a7a7a7' stroke-linecap='round' stroke-linejoin='round' stroke-width='.9' d='M124.2 135.1h40.9v38.5h-40.9z'></path>
+    <text class='text-ipad' xml:space='preserve' x='144.7' y='156.4' fill='#767676' stroke-width='.3' font-family='Source Sans Pro' font-size='6.4' letter-spacing='0' style='line-height:1.25;-inkscape-font-specification:'Source Sans Pro, Normal';text-align:center' text-anchor='middle' word-spacing='0'><tspan x='144.7' y='156.4'>{6}</tspan></text>
+    <text class='text-ipad' xml:space='preserve' x='103.9' y='156.4' fill='#767676' stroke-width='.3' font-family='Source Sans Pro' font-size='6.4' letter-spacing='0' style='line-height:1.25;-inkscape-font-specification:'Source Sans Pro, Normal';text-align:center' text-anchor='middle' word-spacing='0'><tspan x='103.9' y='156.4'>{5}</tspan></text>
+    <text class='text-ipad' xml:space='preserve' x='62.7' y='156.4' fill='#767676' stroke-width='.3' font-family='Source Sans Pro' font-size='6.4' letter-spacing='0' style='line-height:1.25;-inkscape-font-specification:'Source Sans Pro, Normal';text-align:center' text-anchor='middle' word-spacing='0'><tspan x='62.7' y='156.4'>{4}</tspan></text>
+    <text class='text-ipad' xml:space='preserve' x='144.7' y='117.8' fill='#767676' stroke-width='.3' font-family='Source Sans Pro' font-size='6.4' letter-spacing='0' style='line-height:1.25;-inkscape-font-specification:'Source Sans Pro, Normal';text-align:center' text-anchor='middle' word-spacing='0'><tspan x='144.7' y='117.8'>{3}</tspan></text>
+  </g>
+</svg>
