@@ -47,7 +47,7 @@ page_individual_performance_session <- function(input, output, session, currentP
   output$last_session_performance_left <- renderUI({
     validate(need(currentPlayer(), "No current player."))
     
-    toReturn <- div(
+    ui <- div(
       p(paste("Game Type:",
               as.character(currentSession$df[1, "gameType"]))),
       p(paste("Circle Amount:", 
@@ -57,13 +57,13 @@ page_individual_performance_session <- function(input, output, session, currentP
       p(paste("No. of Levels played:", 
               as.character(nrow(currentSession$df))))
     )
-    return(toReturn)
+    return(ui)
   })
   
   output$last_session_performance_right <- renderUI({
     validate(need(currentPlayer(), "No current player."))
     
-    toReturn <- div(
+    ui <- div(
       p(paste("Best:", 
               as.character(round(currentSession$df[1, "sessionBestReactionTime"], 2)), "s")),
       p(paste("Median:", 
@@ -71,7 +71,7 @@ page_individual_performance_session <- function(input, output, session, currentP
       p(paste("Worst:", 
               as.character(round(currentSession$df[1, "sessionWorstReactionTime"], 2)), "s"))
     )
-    return(toReturn)
+    return(ui)
   })
   
   #TODO : change the settings for the heat map colors
@@ -108,10 +108,10 @@ page_individual_performance_session <- function(input, output, session, currentP
       svg <- str_replace(svg, listColors[i], tmpColor)
     }
 
-    toReturn <- HTML(
+    ui <- HTML(
       svg
     )
-    return(toReturn)
+    return(ui)
   })
   
   callModule(plot_performance_per_level, "plot_performance_per_level", reactive(currentSession$df))

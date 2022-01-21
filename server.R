@@ -19,9 +19,6 @@ shinyServer(function(input, output) {
     callModule(page_individual_performance_session, "page_individual_performance_session",
                reactive(r_currentPlayer$df),
                reactive(r_D$df))
-    callModule(page_individual_performance_over_time, "page_individual_performance_over_time",
-               reactive(r_currentPlayer$df),
-               reactive(r_D$df))
     callModule(page_trends_statistics_players, "page_trends_statistics_players",
                reactive(r_D$df),
                reactive(r_currentPlayer$df))
@@ -29,10 +26,8 @@ shinyServer(function(input, output) {
                reactive(r_currentPlayer$df),
                reactive(r_D$df))
     
-    #observeEvents
-    observeEvent(D$trigger, {
-        req(D$trigger > 0)
-        r_D$df <- D$df
+    observeEvent(D, {
+        r_D$df <- D
     })
     observeEvent(listPlayers$trigger, {
         req(listPlayers$trigger > 0)

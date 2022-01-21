@@ -15,9 +15,16 @@ data_list_players <- function(input, output, session, D) {
 
   observeEvent(D(), {
     if(!is.null(D())) {
-      listPlayers = D() %>%
-        distinct(profileID, playerName) %>%
-        mutate(playerNameID = paste(playerName, "(", profileID, ")"))
+
+      listPlayers <- D() %>%
+        group_by(profileID) %>%
+        filter(sessionID == max(sessionID)) %>%
+        summarise(
+          playerName = first(playerName),
+          playerNameID = paste(first(playerName), "(", first(profileID), ")"),
+          Timestamp = last(Timestamp)
+        )
+      
       toReturn$df <-  listPlayers
       toReturn$trigger <- toReturn$trigger + 1
     }

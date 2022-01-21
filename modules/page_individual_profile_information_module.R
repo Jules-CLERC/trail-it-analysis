@@ -3,21 +3,19 @@ page_individual_profile_information_UI <- function(id) {
   mainPanel(width = 12,
             fluidRow(
               column(6,
-                     div(
-                       id = 'div-player-header',
-                       img(src='user.png', align = "left", id="user-image"),
-                       uiOutput(ns("player_header"))
-                     )
+                     style="padding-left: 0px !important;",
+                     column(2, style="padding-left: 0px !important;",
+                            img(src='user.png', align = "left", id="user-image")),
+                     column(8, uiOutput(ns("player_header")))
               )
             ),
             br(),
             fluidRow(
               column(6,
-                     uiOutput(ns("player_performance_header"))
+                     uiOutput(ns("player_performance_summary"))
               ),
               column(6,
-                     h5("Current treatment progress", class="title-div"),
-                     uiOutput(ns("player_progress_treatment"))
+                     plot_progress_bar_UI(ns("plot_progress_bar"))
               )
             ),
             fluidRow(
@@ -67,14 +65,14 @@ page_individual_profile_information <- function(input, output, session, D, curre
       lastDatePlay = as.character(paste("Played", round(as.numeric(dur, "years")), "year(s) ago (", datePlayer[[1]], ")"))
     }
     
-    toReturn <- div(
+    ui <- div(
         h1(playerName),
         p(lastDatePlay)
     )
-    return(toReturn)
+    return(ui)
   })
   
-  output$player_performance_header <- renderUI({
+  output$player_performance_summary <- renderUI({
     validate(need(playerData$df, "No current player."))
     
     #get last session reaction time
@@ -124,30 +122,29 @@ page_individual_profile_information <- function(input, output, session, D, curre
     }
 
     #UI to return
-    toReturn <- fluidRow(
-      column(6,
-             class="div-player-performance",
-             h1(lastSessionReactionTime),
-             p("Reaction time")
+    ui <- fluidRow(
+      column(3, style="padding-left: 0px !important;",
+             column(12, h1(lastSessionReactionTime)),
+             column(12, p("Reaction time"))
       ),
-      column(6,
-             class="div-player-performance",
-             div(
-               id="label-percentage-hits",
-               style= paste("background-color:", color),
-               p(paste0(resultPercentageHits,"%"))
-             ),
-             h1(paste0(lastPercentageHits, "%")),
-             p("Hits")
+      column(3,
+             column(12, 
+                    div(
+                      id="label-percentage-hits",
+                      style= paste("background-color:", color),
+                      p(paste0(resultPercentageHits,"%"))
+                    )),
+             column(12, h1(paste0(lastPercentageHits, "%"))),
+             column(12, p("Hits"))
       )
     )
-    return(toReturn)
+    return(ui)
   })
   
   output$player_characteristics <- renderUI({
     validate(need(currentPlayer(), "No current player."))
     
-    toReturn <- div(
+    ui <- div(
       p(paste("Age:",
               as.character(playerData$df[1, "ageGroup"]))),
       p(paste("Training reason:", 
@@ -158,119 +155,10 @@ page_individual_profile_information <- function(input, output, session, D, curre
               as.character(playerData$df[1, "playContext"])))
     )
     
-    return(toReturn)
+    return(ui)
   })
   
-  output$player_progress_treatment <- renderUI({
-    validate(need(currentPlayer(), "No current player."))
-    
-    #Get the last reaction time of the player
-    lastSession <- playerData$df %>%
-      filter(sessionID == max(sessionID))
-    lastSessionReactionTime <- lastSession[1,"sessionMedianReactionTime"]
-    
-    #Get MPC datas
-    mpcD <- D() %>%
-      filter(substring(playerName, 1, 4) == "MPC-") %>%
-      filter(date == "2021-10-15")
-    
-    #Check if the last session can be compared with the MPC datas
-    settingsLastSession <- lastSession %>%
-      distinct(gameType, circleAmount, sessionLength)
-    settingsMPC <- mpcD %>%
-      distinct(gameType, circleAmount, sessionLength)
-    
-    #if the datas can be compared
-    if(nrow(merge(settingsLastSession,settingsMPC)) > 0) {
-      #Get the min value
-      #Progress bar: 0 = 2*sd(strokes_players_reaction_time_array)
-      listMedianReactionTimeStrokesPlayers <- D() %>%
-        filter(trainingReason != "OtherReason") %>%
-        group_by(profileID) %>%
-        filter(gameType == toString(lastSession[1,"gameType"])) %>%
-        filter(circleAmount == toString(lastSession[1,"circleAmount"])) %>%
-        filter(sessionLength == toString(lastSession[1,"sessionLength"])) %>%
-        filter(sessionID == min(sessionID)) %>%
-        distinct(sessionMedianReactionTime) %>%
-        ungroup() %>%
-        summarise(value = 2 * sd(sessionMedianReactionTime))
-      stkValue = listMedianReactionTimeStrokesPlayers$value
-      
-      #Get the max value
-      #Progress bar: 100 = 2*sd(mpc_players_reaction_time_array)
-      listMedianReactionTimeMpcPlayers <- mpcD %>%
-        group_by(profileID) %>%
-        filter(gameType == toString(lastSession[1,"gameType"])) %>%
-        filter(circleAmount == toString(lastSession[1,"circleAmount"])) %>%
-        filter(sessionLength == toString(lastSession[1,"sessionLength"])) %>%
-        filter(sessionID == min(sessionID)) %>%
-        distinct(sessionMedianReactionTime) %>%
-        ungroup() %>%
-        summarise(value = mean(sessionMedianReactionTime))
-      mpcValue = listMedianReactionTimeMpcPlayers$value
-      
-      d1 = stkValue - mpcValue
-      d2 = stkValue - lastSessionReactionTime$sessionMedianReactionTime
-      d3 = lastSessionReactionTime$sessionMedianReactionTime - mpcValue
-      if(d3 < 0) {
-        result = 100
-      }
-      else {
-        result = (d2 / d1) * 100
-      }
-      result = round(result)
-      #UI to return
-      toReturn <- div(
-        p(paste(round(d3,2), "seconds from normal reaction time")),
-        HTML(paste0('
-          <div class="progress" style="height: 20px;">
-            <div class="progress-bar" role="progressbar" style="width: ', result ,'%;" aria-valuenow="', result ,'" aria-valuemin="0" aria-valuemax="100">', result ,'%</div>
-          </div>
-        '))
-      )
-      return(toReturn)
-    }
-    else {
-      #Check if a previous session with the same settings exists
-      similarPreviousSession <- playerData$df %>%
-        filter(sessionID != max(sessionID)) %>%
-        merge(settingsLastSession) %>%
-        filter(sessionID == max(sessionID))
-      if(nrow(similarPreviousSession) == 0) {
-        #UI to return
-        toReturn <- div(
-          p("No MPC data to compared"),
-          p("No previous session with the same settings to compared")
-        )
-        return(toReturn)
-      }
-      else {
-        #Compared the two sessions
-        result <- similarPreviousSession[1,"sessionMedianReactionTime"] - lastSessionReactionTime 
-        if (result > 0) {
-          #UI to return
-          toReturn <- div(
-            p(paste("reaction time improved by", round(result, 2), "s"))
-          )
-          return(toReturn)
-        }
-        else if (result < 0) {
-          #UI to return
-          toReturn <- div(
-            p(paste("reaction time decreased by", abs(round(result, 2)), "s"))
-          )
-          return(toReturn)
-        }
-        else {
-          #UI to return
-          toReturn <- div(
-            p("reaction time unchanged")
-          )
-          return(toReturn)
-        }
-      }
-    }
-  })
+  callModule(plot_progress_bar, "plot_progress_bar", D, currentPlayer, playerData)
   
   output$player_past_sessions <- renderUI({
     validate(need(currentPlayer(), "No current player."))
@@ -297,16 +185,16 @@ page_individual_profile_information <- function(input, output, session, D, curre
     if(nrow(datesPlayer) > maxDates) {
       ns <- session$ns
       callModule(modal_individual_profile_dates, "modal_individual_profile_dates", datesPlayer)
-      toReturn <- div(
+      ui <- div(
         HTML(strDates),
         modal_individual_profile_dates_UI(ns("modal_individual_profile_dates"))
       )
     }
     else {
-      toReturn <- div(
+      ui <- div(
         HTML(strDates)
       )
     }
-    return(toReturn)
+    return(ui)
   })
 }

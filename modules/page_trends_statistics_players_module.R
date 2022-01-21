@@ -2,26 +2,17 @@ page_trends_statistics_players_UI <- function(id) {
   ns = NS(id)
   mainPanel(width = 12,
             fluidRow(
-              column(2,
-                     div(
-                       class="trends-statistics-header-div",
-                       h1(textOutput(ns("outputNbPlayers"))),
-                       p("PLAYERS")
-                     )
+              div(style="display: inline-block;",
+                     column(12, h1(textOutput(ns("outputNbPlayers")))),
+                     column(12, p("PLAYERS"))
               ),
-              column(2,
-                     div(
-                       class="trends-statistics-header-div",
-                       h1(textOutput(ns("outputNbSessionsPlayed"))),
-                       p("SESSIONS PLAYED")
-                     )
+              div(style="display: inline-block;",
+                     column(12, h1(textOutput(ns("outputNbSessionsPlayed")))),
+                     column(12, p("SESSIONS PLAYED"))
               ),
-              column(2,
-                     div(
-                       class="trends-statistics-header-div",
-                       h1(textOutput(ns("outputNbStrokePatients"))),
-                       p("STROKE PATIENTS")
-                     )
+              div(style="display: inline-block;",
+                     column(12, h1(textOutput(ns("outputNbStrokePatients")))),
+                     column(12, p("STROKE PATIENTS"))
               )
             ),
             hr(style="border-color: black"),
@@ -35,8 +26,7 @@ page_trends_statistics_players_UI <- function(id) {
                                               "Outpatients" = "selectOutPatients",
                                               "Other Players" = "selectOtherPlayers", 
                                               "Reference Players" = "selectReferencePlayers"),
-                                            selected = c("selectPatients", "selectOutPatients"), inline = TRUE),
-                         h5(class="error-text", textOutput(ns("errorTextOptionFilter")))
+                                            selected = c("selectPatients", "selectOutPatients"), inline = TRUE)
                        ),
                        div(
                          p("Filter game type", class="title-div"),
@@ -44,8 +34,7 @@ page_trends_statistics_players_UI <- function(id) {
                                             choices = c(
                                               "1-2-3-4" = "gameA", 
                                               "1-A-2-B" = "gameB"),
-                                            selected = c("gameA", "gameB"), inline = TRUE),
-                         h5(class="error-text", textOutput(ns("errorTextOptionGameType")))
+                                            selected = c("gameA", "gameB"), inline = TRUE)
                        )
               )
             ),
@@ -148,30 +137,19 @@ page_trends_statistics_players <- function(input, output, session, D, currentPla
     return(nbStrokePatients[[1]])
   })
   
-  output$errorTextOptionFilter <- renderText({
-    if(length(input$optionFilter) == 0) {
-      return("You need to select a Filter Players.")
-    }
-  })
-  
-  output$errorTextOptionGameType <- renderText({
-    if(length(input$optionGameType) == 0) {
-      return("You need to select a Filter game type.")
-    }
-  })
-  
   callModule(plot_timeline, "plot_timeline", reactive(filterStatisticsData$df), currentPlayer)
   
   output$outputHeadlineDemographics <- renderText({
     validate(need(D(), "No data."))
-    toReturn <- paste0("The age median for this group is <b>", 
+    validate(need(nrow(filterStatisticsData) > 0, "No data."))
+    ui <- paste0("The age median for this group is <b>", 
                       filterStatisticsData$ageMedian$df, 
                       "</b> years old (n=<b>",
                       filterStatisticsData$df %>% distinct(profileID) %>% count(),
                       "</b>), playing to train <b>",
                       filterStatisticsData$trainingReason$df,
                       "</b>.")
-    return(toReturn)
+    return(ui)
   })
   
   filterStatisticsData$ageMedian <- callModule(plot_age_median, "plot_age_median", reactive(filterStatisticsData$df))
@@ -191,14 +169,14 @@ page_trends_statistics_players <- function(input, output, session, D, currentPla
   
   output$outputHeadlineTrainingPrograms <- renderText({
     validate(need(D(), "No data."))
-    toReturn <- paste0("Most players in the group is playing with <b>",
+    ui <- paste0("Most players in the group is playing with <b>",
                        filterStatisticsData$circleAmount$df,
                        " circles</b> for <b>",
                        filterStatisticsData$sessionLength$df,
                        " minutes</b> in game type <b>",
                        filterStatisticsData$gameType,
                        "</b>.")
-    return(toReturn)
+    return(ui)
   })
   
   filterStatisticsData$circleAmount <- callModule(plot_circle_amount, "plot_circle_amount", reactive(filterStatisticsData$df))
@@ -236,9 +214,6 @@ page_trends_statistics_players <- function(input, output, session, D, currentPla
   })
   observeEvent(toListen(), {
     validate(need(D(), "No data."))
-    
-    validate(need(length(input$optionFilter) > 0, "No players selected."))
-    validate(need(length(input$optionGameType) > 0, "No game type selected."))
     
     #Create list that contains all profileID Select
     listProfileIdSelect <- data.frame(matrix(ncol = 1, nrow = 0))

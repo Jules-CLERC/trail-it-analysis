@@ -1,9 +1,9 @@
 #UI function
 data_select_player_UI <- function(id) {
   ns = NS(id)
-  list(
-    actionButton(ns("changeCurrentPlayer"), "Change current player"),
-    textOutput(ns("currentPlayerOutput"))
+  fluidRow(
+    column(2, actionButton(ns("changeCurrentPlayer"), "Change current player")),
+    column(4, textOutput(ns("currentPlayerOutput")))
   )
 }
 
@@ -16,10 +16,16 @@ data_select_player <- function(input, output, session, listPlayers, currentPlaye
   
   output$currentPlayerOutput <- renderText({
     validate(need(currentPlayer(), "No data yet."))
-    paste("Data from",
-          listPlayers() %>%
-            filter(profileID == currentPlayer()) %>%
-            select(playerNameID))
+    validate(need(listPlayers(), "No data yet."))
+    
+    dataCurrentPlayer <- listPlayers() %>%
+      filter(profileID == currentPlayer())
+    
+    ymd = as.Date(dataCurrentPlayer$Timestamp, format = "%Y-%m-%d %H:%M:%OS")
+    strDate = paste0(ymd(ymd), ", ", format(strptime(dataCurrentPlayer$Timestamp, format = "%Y-%m-%d %H:%M:%OS"), '%H:%M'))
+    
+    text = paste0(dataCurrentPlayer$playerName, " (", strDate, ")")
+    return(text)
   })
   
   ns <- session$ns

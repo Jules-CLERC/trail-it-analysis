@@ -24,22 +24,22 @@ page_trends_performance_players_UI <- function(id) {
 page_trends_performance_players <- function(input, output, session, currentPlayer, D) {
 
   output$text_performance_comparison_scatter <- renderText({
-    toReturn <- paste0("Patients are on average ", 
+    ui <- paste0("Patients are on average ", 
                        round(dataPerformanceComparisonScatter$meanPatientsReactionTime - dataPerformanceComparisonScatter$meanNonPatientsReactionTime, 1),
                        " seconds slower than the non-patient group and ", 
                        round(dataPerformanceComparisonScatter$meanPatientsReactionTime - dataPerformanceComparisonScatter$meanReference, 1),
                        " seconds slower compared to the reference.")
-    return(toReturn)
+    return(ui)
   })
   
   output$text_performance_comparison_histogram <- renderText({
     if(!is.null(dataPerformanceComparisonHistogram$patientsAvgMinutesTotal) && !is.null(dataPerformanceComparisonHistogram$nonPatientsAvgMinutesTotal)) {
-      toReturn <- paste0("Patients train on average for ",
+      ui <- paste0("Patients train on average for ",
                          round(dataPerformanceComparisonHistogram$patientsAvgMinutesTotal, 1),
                          " minutes in total, whereas non-patient train for ",
                          round(dataPerformanceComparisonHistogram$nonPatientsAvgMinutesTotal, 1),
                          " minutes in total.")
-      return(toReturn)
+      return(ui)
     }
   })
   

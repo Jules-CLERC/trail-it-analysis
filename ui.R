@@ -4,7 +4,6 @@ shinyUI(
         useShinyjs(),
         tags$header(fluidRow(
             column(1, div(class="text-center",img(src='icon.jpeg', style="height:50px;"))),
-            column(1, data_import_UI("data_import_sql")),
             column(10, data_select_player_UI("data_select_player"))
         )),
         
@@ -18,10 +17,7 @@ shinyUI(
                                            ),
                                            tabPanel(value = "Performance session", id = "PerformanceSession", HTML("Performance session<br><small>See overview information.</small>"),
                                                     div(class="main-content", page_individual_performance_session_UI("page_individual_performance_session"))
-                                           ),
-                                           tabPanel(value = "Performance over time", id = "PerformanceOverTime", HTML("Performance over time<br><small>See overview information.</small>"),
-                                                    div(class="main-content", page_individual_performance_over_time_UI("page_individual_performance_over_time"))
-                                           ),
+                                           )
                               )
                      ),
                      tabPanel(title = div(class="text-center", img(src='nav_trends.svg', style="max-width:100%;"),tags$br(),"Trends"),

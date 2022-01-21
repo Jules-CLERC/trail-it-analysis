@@ -16,7 +16,7 @@ plot_group_performance_comparison_scatter <- function(input, output, session, da
       'layerReference' = 'y2',
       'layerPatients' = 'y2',
       'layerNonPatients' = 'y2',
-      'layerCurrentPlayer' = 'y2'
+      'layerCurrentPlayer' = 'y1'
     ),
     oldKey = ''
   )
@@ -227,7 +227,7 @@ plot_group_performance_comparison_scatter <- function(input, output, session, da
                                    font = list(color = 'white',
                                                family = 'Helvetica Neue',
                                                size = 14))
-
+    
     return(fig)
   })
   

@@ -18,6 +18,17 @@ data_change_player <- function(input, output, session, listPlayers) {
   ns <- session$ns
   
   observeEvent(listPlayers(), {
+    
+    # By default select the player who last played
+    if(is.null(toReturn$df)) {
+      validate(need(listPlayers(), "No data yet."))
+      lastPlayer <- listPlayers() %>%
+        filter(Timestamp == max(Timestamp)) %>%
+        select(profileID)
+      toReturn$df <-  lastPlayer
+      toReturn$trigger <- toReturn$trigger + 1
+    }
+    
     output$sessionList <- renderUI({
       validate(need(listPlayers(), "No data yet."))
       lapply(1:nrow(listPlayers()), function(i) {

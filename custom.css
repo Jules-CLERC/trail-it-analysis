@@ -164,12 +164,6 @@ label {
   font-size: 15px;
 }
 
-.div-player-performance {
-  display: flex;
-  flex-direction: column;
-  align-items: left;
-}
-
 #label-percentage-hits {
   position: absolute;
   width: fit-content;
@@ -191,20 +185,6 @@ label {
 .progress {
   border: 2px solid black;
   border-radius: 15px;
-}
-
-#div-player-header {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-
-#div-player-header > div > div > h1 {
-  margin-bottom: 0px;
-}
-
-.div-player-performance > h1 {
-  margin-bottom: 0px;
 }
 
 .text-ipad {
@@ -258,12 +238,6 @@ label {
     text-align: center;
     line-height: 30px;
     cursor: pointer;
-}
-
-.trends-statistics-header-div {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 
 .container-demographics {

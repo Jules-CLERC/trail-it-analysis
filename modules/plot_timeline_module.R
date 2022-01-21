@@ -11,6 +11,7 @@ plot_timeline_UI <- function(id) {
 plot_timeline <- function(input, output, session, data, currentPlayer) {
   output$timeline_graph <- renderPlotly({
     validate(need(data(), "No data."), errorClass = "vis")
+    validate(need(nrow(data()) > 0, "No data."), errorClass = "vis")
     validate(need(currentPlayer(), "No current player"), errorClass = "vis")
     
     #Get all datas important for the plot
